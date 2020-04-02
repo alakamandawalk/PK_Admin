@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "797644559237",
+    "firebase_url": "https://pk-admin-ea5e7.firebaseio.com",
+    "project_id": "pk-admin-ea5e7",
+    "storage_bucket": "pk-admin-ea5e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797644559237:android:6097abb43c72de30d32aec",
+        "android_client_info": {
+          "package_name": "com.alakamandawalk.pkadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797644559237-fjd4jre3014sjlppsf1goq5coh2tggbk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alakamandawalk.pkadmin",
+            "certificate_hash": "b173f3408cba5f7dc742e3c9f34dd7e6dd18f628"
+          }
+        },
+        {
+          "client_id": "797644559237-vubgtvm8c6rpgu4lc632528qtvn2l0mn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4wOo9UCUeC27bVSPVI-RPqjqOa0IZRxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "797644559237-vubgtvm8c6rpgu4lc632528qtvn2l0mn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
