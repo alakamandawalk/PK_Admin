@@ -60,7 +60,9 @@
                 <ImageView
                     android:id="@+id/storyImgIv"
                     android:layout_width="match_parent"
-                    android:layout_height="230dp"/>
+                    android:layout_height="230dp"
+                    android:src="@drawable/img_place_holder"
+                    android:scaleType="centerCrop"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"

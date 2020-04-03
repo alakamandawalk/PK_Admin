@@ -3,6 +3,7 @@ package com.alakamandawalk.pkadmin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -33,6 +34,8 @@ public class ReadStoryActivity extends AppCompatActivity {
 
     String storyId;
 
+    ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class ReadStoryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         storyId = intent.getStringExtra("storyId");
+
+        pd = new ProgressDialog(this);
 
         backIb = findViewById(R.id.backIb);
         titleTv = findViewById(R.id.titleTv);
@@ -61,6 +66,10 @@ public class ReadStoryActivity extends AppCompatActivity {
     }
 
     private void loadStory() {
+
+        pd.setMessage("Loading...");
+        pd.show();
+        pd.setCanceledOnTouchOutside(false);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("story");
         Query query = ref.orderByChild("storyId").equalTo(storyId);
@@ -95,10 +104,13 @@ public class ReadStoryActivity extends AppCompatActivity {
                     dateTv.setText(storyDate);
 
                 }
+
+                pd.dismiss();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                pd.dismiss();
                 Toast.makeText(ReadStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

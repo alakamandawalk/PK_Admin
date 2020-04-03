@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -78,8 +80,27 @@ public class DashboardActivity extends AppCompatActivity {
                             startActivity(new Intent(DashboardActivity.this, NewStoryActivity.class));
                         }
                         if (id == 1){
-                            firebaseAuth.signOut();
-                            checkUserStatus();
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                            builder.setTitle("Sign Out");
+                            builder.setMessage("are you sure..?");
+                            builder.setPositiveButton("Sign out",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            firebaseAuth.signOut();
+                                            checkUserStatus();
+                                        }
+                                    });
+                            builder.setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
                         }
 
                         return false;
@@ -92,7 +113,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void loadStories() {
 
-        pd.setTitle("Loading...");
+        pd.setMessage("Loading...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
@@ -107,9 +128,8 @@ public class DashboardActivity extends AppCompatActivity {
                     storyList.add(storyData);
                     storyAdapter = new StoryAdapter(DashboardActivity.this, storyList);
                     storyRv.setAdapter(storyAdapter);
-                    pd.dismiss();
                 }
-
+                pd.dismiss();
             }
 
             @Override

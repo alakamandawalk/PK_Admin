@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setTitle("sign in");
+                pd.setMessage("sign in");
                 pd.show();
                 pd.setCanceledOnTouchOutside(false);
                 signIn();

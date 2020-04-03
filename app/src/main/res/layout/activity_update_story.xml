@@ -58,9 +58,11 @@
                 android:padding="5dp">
 
                 <ImageView
-                    android:id="@+id/storyImgIv"
+                    android:id="@+id/editStoryImgIv"
                     android:layout_width="match_parent"
-                    android:layout_height="230dp"/>
+                    android:layout_height="230dp"
+                    android:src="@drawable/img_place_holder"
+                    android:scaleType="centerCrop"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -68,11 +70,11 @@
                     android:layout_marginTop="20dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/storyNameEt"
+                        android:id="@+id/editStoryNameEt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:hint="Name"
+                        android:hint="Edit Name"
                         android:inputType="text"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -83,12 +85,13 @@
                     android:layout_marginTop="10dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/newStoryEt"
+                        android:id="@+id/editStoryEt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:hint="New Story"
-                        android:inputType="textMultiLine"/>
+                        android:hint="Edit Story"
+                        android:inputType="textMultiLine"
+                        android:lineSpacingExtra="15dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,11 +102,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/publishBtn"
+        android:id="@+id/updateBtn"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="30dp"
-        android:text="publish"
+        android:text="update"
         android:background="@drawable/btn_green"
         android:textColor="#ffffff"
         android:layout_alignParentBottom="true"

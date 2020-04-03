@@ -115,7 +115,7 @@ public class NewStoryActivity extends AppCompatActivity {
 
     private void uploadData(final String storyName, final String story, Uri uri) {
 
-        pd.setTitle("uploading new story:)");
+        pd.setMessage("uploading new story...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 

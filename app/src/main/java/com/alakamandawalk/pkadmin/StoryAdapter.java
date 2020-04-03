@@ -1,7 +1,9 @@
 package com.alakamandawalk.pkadmin;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -97,13 +99,33 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
                 PopupMenu popupMenu = new PopupMenu(context, holder.optionIb, Gravity.END);
                 popupMenu.getMenu().add(Menu.NONE, 0,0,"Delete");
-                popupMenu.getMenu().add(Menu.NONE, 1,1,"Update");
+                popupMenu.getMenu().add(Menu.NONE, 1,1,"Edit");
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id==0){
-                            deleteStory(storyId, storyImage);
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete");
+                            builder.setMessage("are you sure..?");
+                            builder.setPositiveButton("delete",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            deleteStory(storyId, storyImage);
+                                        }
+                                    });
+                            builder.setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
                         }
 
                         if (id==1){
@@ -125,7 +147,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
     private void deleteStory(final String storyId, String storyImage) {
 
         final ProgressDialog pd = new ProgressDialog(context);
-        pd.setTitle("Deleting...");
+        pd.setMessage("Deleting...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
