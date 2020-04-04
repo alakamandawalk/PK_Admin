@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -146,12 +147,13 @@ public class NewStoryActivity extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
+
                                             pd.dismiss();
                                             Toast.makeText(NewStoryActivity.this, "story uploaded :)", Toast.LENGTH_SHORT).show();
 
-                                            image_uri = null;
-                                            storyNameEt.setText("");
-                                            newStoryEt.setText("");
+                                            startActivity(new Intent(NewStoryActivity.this, DashboardActivity.class));
+                                            finish();
+
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override

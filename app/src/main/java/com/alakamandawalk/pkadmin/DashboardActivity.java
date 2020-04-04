@@ -159,6 +159,4 @@ public class DashboardActivity extends AppCompatActivity {
         checkUserStatus();
         super.onStart();
     }
-
-
 }

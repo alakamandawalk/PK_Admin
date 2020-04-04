@@ -159,11 +159,11 @@ public class UpdateStoryActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             pd.dismiss();
-                                                            Toast.makeText(UpdateStoryActivity.this, "story updated :)", Toast.LENGTH_SHORT).show();
 
-                                                            image_uri = null;
-                                                            editStoryEt.setText("");
-                                                            editStoryNameEt.setText("");
+                                                            Toast.makeText(UpdateStoryActivity.this, "story updated :)", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(UpdateStoryActivity.this, DashboardActivity.class));
+                                                            finish();
+
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
