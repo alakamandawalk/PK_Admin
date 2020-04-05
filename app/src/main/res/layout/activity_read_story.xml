@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,85 +8,46 @@
     tools:context=".ReadStoryActivity"
     android:background="#aaaaaa">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/backIb"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/round_background"
-            android:layout_margin="5dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/round_background"
-            android:layout_margin="5dp">
-
-            <TextView
-                android:id="@+id/titleTv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="#ffffff"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:gravity="center"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <ScrollView
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:title="Library">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="230dp">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/storyImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp"
-                    android:scaleType="centerCrop"/>
+                <ImageButton
+                    android:id="@+id/backIb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_back"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:layout_marginRight="10dp"/>
 
                 <TextView
-                    android:id="@+id/dateTv"
-                    android:layout_width="match_parent"
+                    android:id="@+id/titleTv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textAlignment="textEnd"
-                    android:text="01/04/2020"
-                    android:padding="5dp"
-                    android:layout_alignParentBottom="true"
                     android:textColor="#ffffff"
-                    android:background="#99999999"/>
+                    android:textSize="20sp"
+                    android:layout_gravity="center"/>
 
-            </RelativeLayout>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/storyTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="22sp"
-                android:layout_marginTop="20dp"
-                android:lineSpacingExtra="15dp"/>
+        </androidx.appcompat.widget.Toolbar>
 
-        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    </ScrollView>
+    <include layout="@layout/content_read_story"/>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

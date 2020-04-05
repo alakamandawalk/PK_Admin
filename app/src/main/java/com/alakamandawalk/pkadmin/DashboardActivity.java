@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     RecyclerView storyRv;
     ImageButton menuIb;
+    Toolbar toolbar;
 
     ProgressDialog pd;
 
@@ -51,7 +54,6 @@ public class DashboardActivity extends AppCompatActivity {
         storyRv = findViewById(R.id.storyRv);
 
         pd = new ProgressDialog(this);
-
 
         firebaseAuth = FirebaseAuth.getInstance();
 

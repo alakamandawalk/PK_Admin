@@ -13,6 +13,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -38,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 public class UpdateStoryActivity extends AppCompatActivity {
@@ -124,6 +127,11 @@ public class UpdateStoryActivity extends AppCompatActivity {
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
+        Bitmap bitmap = ((BitmapDrawable)editStoryImgIv.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        final byte[] data = baos.toByteArray();
+
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(editStoryImage);
         storageRef.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -134,7 +142,7 @@ public class UpdateStoryActivity extends AppCompatActivity {
                         String filePathAndName = "story/" + "story_" + timeStamp;
 
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
-                        storageReference.putFile(uri)
+                        storageReference.putBytes(data)
                                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
