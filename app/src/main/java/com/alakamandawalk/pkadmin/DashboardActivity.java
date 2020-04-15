@@ -2,6 +2,7 @@ package com.alakamandawalk.pkadmin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,11 +16,14 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,37 +39,36 @@ import java.util.List;
 public class DashboardActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
-    StoryAdapter storyAdapter;
-    List<StoryData> storyList;
 
-    RecyclerView storyRv;
+
     ImageButton menuIb;
-    Toolbar toolbar;
+    TextView titleTv;
 
-    ProgressDialog pd;
+    FrameLayout frameLayout;
+    BottomNavigationView bottomNav;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        storyRv = findViewById(R.id.storyRv);
-        menuIb = findViewById(R.id.menuIb);
-        storyRv = findViewById(R.id.storyRv);
+        frameLayout = findViewById(R.id.frameLayout);
+        bottomNav = findViewById(R.id.bottomNav);
 
-        pd = new ProgressDialog(this);
+        bottomNav.setOnNavigationItemSelectedListener(selectedListener);
+
+        menuIb = findViewById(R.id.menuIb);
+        titleTv = findViewById(R.id.titleTv);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
-
-        storyRv.setLayoutManager(layoutManager);
-
-        storyList = new ArrayList<>();
-        
-        loadStories();
+        titleTv.setText("Home");
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+        ft1.replace(R.id.frameLayout, homeFragment, "");
+        ft1.commit();
 
         menuIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,35 +116,43 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void loadStories() {
+    private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        pd.setMessage("Loading...");
-        pd.show();
-        pd.setCanceledOnTouchOutside(false);
+            switch (item.getItemId()){
+                case R.id.nav_search:
 
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                storyList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    StoryData storyData = ds.getValue(StoryData.class);
+                    titleTv.setText("Explore");
+                    SearchFragment searchFragment = new SearchFragment();
+                    FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+                    ft3.replace(R.id.frameLayout, searchFragment, "");
+                    ft3.commit();
+                    return true;
 
-                    storyList.add(storyData);
-                    storyAdapter = new StoryAdapter(DashboardActivity.this, storyList);
-                    storyRv.setAdapter(storyAdapter);
-                }
-                pd.dismiss();
+                case R.id.nav_home:
+
+                    titleTv.setText("Home");
+                    HomeFragment homeFragment = new HomeFragment();
+                    FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+                    ft1.replace(R.id.frameLayout, homeFragment, "");
+                    ft1.commit();
+                    return true;
+
+                case R.id.nav_fav:
+
+                    titleTv.setText("Favorites");
+                    FavoriteFragment favoriteFragment = new FavoriteFragment();
+                    FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                    ft2.replace(R.id.frameLayout, favoriteFragment, "");
+                    ft2.commit();
+                    return true;
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(DashboardActivity.this, ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                pd.dismiss();
-            }
-        });
-
-    }
+            return false;
+        }
+    };
 
     private void checkUserStatus() {
 
