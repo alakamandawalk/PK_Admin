@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -80,7 +81,15 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             Picasso.get().load(R.drawable.img_place_holder).into(holder.storyImageIv);
         }
 
-        holder.storyNameTv.setText(storyName);
+        if (storyName.length()>27){
+
+            holder.storyNameTv.setText(storyName.substring(0,25)+"...");
+
+        }else {
+
+            holder.storyNameTv.setText(storyName);
+        }
+
         holder.storyDateTv.setText(storyDate);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
