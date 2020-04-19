@@ -1,9 +1,12 @@
 package com.alakamandawalk.pkadmin;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,8 +24,10 @@ import java.util.ArrayList;
  */
 public class FavoriteFragment extends Fragment {
 
-    ListView obj;
-    DBHelper mydb;
+    DBHelper dbHelper;
+
+    RecyclerView favStoryRv;
+    FavStoryAdapter favStoryAdapter;
 
     public FavoriteFragment() {
         // Required empty public constructor
@@ -34,30 +40,31 @@ public class FavoriteFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
 
-        obj = view.findViewById(R.id.listView1);
 
-        mydb = new DBHelper(getActivity());
-        ArrayList array_list = mydb.getAllStories();
-        ArrayAdapter arrayAdapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1, array_list);
+        dbHelper = new DBHelper(getActivity());
 
-        obj.setAdapter(arrayAdapter);
-//        obj.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                int id_To_Search = position + 1;
-//
-//                Bundle dataBundle = new Bundle();
-//                dataBundle.putInt("id", id_To_Search);
-//
-//                Intent intent = new Intent(getActivity(),ReadStoryActivity.class);
-//
-//                intent.putExtras(dataBundle);
-//                startActivity(intent);
-//
-//            }
-//        });
+        favStoryRv = view.findViewById(R.id.favStoryRv);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        favStoryRv.setLayoutManager(layoutManager);
+
+        loadStories();
 
         return view;
+    }
+
+    private void loadStories() {
+
+        favStoryAdapter = new FavStoryAdapter(getActivity(), dbHelper.getAllStories());
+        favStoryRv.setAdapter(favStoryAdapter);
+
+    }
+
+    @Override
+    public void onResume() {
+        loadStories();
+        super.onResume();
     }
 }

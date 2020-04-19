@@ -58,7 +58,7 @@
                 android:layout_alignParentRight="true"
                 android:background="@null"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"/>
+                android:padding="10dp"/>
 
         </RelativeLayout>
 

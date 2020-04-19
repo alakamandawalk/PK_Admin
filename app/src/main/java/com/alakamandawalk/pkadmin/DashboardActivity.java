@@ -54,6 +54,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        checkUserStatus();
+
         frameLayout = findViewById(R.id.frameLayout);
         bottomNav = findViewById(R.id.bottomNav);
 
@@ -165,12 +167,6 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
             finish();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        checkUserStatus();
-        super.onStart();
     }
 
 }

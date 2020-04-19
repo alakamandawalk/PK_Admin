@@ -116,8 +116,6 @@ public class ReadStoryActivity extends AppCompatActivity {
                 Toast.makeText(ReadStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private void addOrRemoveFav() {
@@ -141,6 +139,7 @@ public class ReadStoryActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(ReadStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     isOnFav();
+
                 }
             });
         }else {
