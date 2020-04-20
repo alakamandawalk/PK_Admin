@@ -3,9 +3,13 @@ package com.alakamandawalk.pkadmin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -15,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.alakamandawalk.pkadmin.download.LocalDBContract;
+import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +33,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class ReadStoryActivity extends AppCompatActivity {
@@ -46,7 +49,6 @@ public class ReadStoryActivity extends AppCompatActivity {
     FirebaseUser user;
     String uid;
 
-    String storyId;
     String storyName;
     String story;
     String storyImage;
@@ -60,7 +62,8 @@ public class ReadStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_read_story);
 
         Intent intent = getIntent();
-        storyId = intent.getStringExtra("storyId");
+        String isOnlineOffline = intent.getStringExtra("isOnlineOffline");
+        final String storyId = intent.getStringExtra("storyId");
 
         localDb = new DBHelper(this);
 
@@ -75,8 +78,15 @@ public class ReadStoryActivity extends AppCompatActivity {
 
         checkUserStatus();
 
-        loadStory();
-        isOnFav();
+        if (isOnlineOffline.equals("online")){
+            loadStoryOnline(storyId);
+        }
+
+        if (isOnlineOffline.equals("offline")){
+            loadStoryOffline(storyId);
+        }
+
+        isOnDownloads(storyId);
 
         backIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,102 +98,130 @@ public class ReadStoryActivity extends AppCompatActivity {
         favIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addOrRemoveFav();
+                downloadOrRemove(storyId);
             }
         });
 
     }
 
-    private void isOnFav() {
+    private void loadStoryOffline(String id) {
 
-        DatabaseReference userDBRef = FirebaseDatabase.getInstance().getReference("user").child(uid);
-        Query sIdQuery = userDBRef.orderByChild("storyId").equalTo(storyId);
-        sIdQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        Cursor cursor = localDb.getStory(id);
+        cursor.moveToFirst();
 
-                if (dataSnapshot.exists()){
-                    isFav = true;
-                    favIb.setImageResource(R.drawable.ic_fav_light);
-                }else {
-                    isFav=false;
-                    favIb.setImageResource(R.drawable.ic_fav_boder_light);
-                }
-            }
+        String storyName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_NAME));
+        String story = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_STORY));
+        String storyDate = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_DATE));
+        byte[] storyImage = cursor.getBlob(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_IMAGE));
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ReadStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        if (!cursor.isClosed()){
+            cursor.close();
+        }
 
-    private void addOrRemoveFav() {
+        Bitmap bmp = BitmapFactory.decodeByteArray(storyImage, 0, storyImage.length);
 
-        if (isFav){
+        try {
+            storyImg.setImageBitmap(bmp);
+        }catch (Exception e){
+            Toast.makeText(ReadStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            storyImg.setImageResource(R.drawable.img_place_holder);
+        }
 
-            DatabaseReference userDBRef = FirebaseDatabase.getInstance().getReference("user").child(uid);
-            Query query = userDBRef.orderByChild("storyId").equalTo(storyId);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds: dataSnapshot.getChildren()){
-                        ds.getRef().removeValue();
-                        localDb.deleteStory(storyId);
-                        Toast.makeText(ReadStoryActivity.this, "Removed from favorites :)", Toast.LENGTH_SHORT).show();
-                        isOnFav();
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(ReadStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    isOnFav();
+        if (storyName.length()>27){
 
-                }
-            });
+            titleTv.setText(storyName.substring(0,25)+"...");
+
         }else {
 
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("storyId", storyId);
+            titleTv.setText(storyName);
+        }
 
-            DatabaseReference userDBRef = FirebaseDatabase.getInstance().getReference("user");
-            userDBRef.child(uid).child(storyId).setValue(hashMap)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
+        storyTv.setText(story);
 
-                            Bitmap bitmap = ((BitmapDrawable)storyImg.getDrawable()).getBitmap();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            final byte[] data = baos.toByteArray();
+        dateTv.setText(storyDate);
 
-                            localDb.insertStory(storyId,storyName,story,storyDate,data);
+    }
 
-                            Toast.makeText(ReadStoryActivity.this, "Added to favorites", Toast.LENGTH_SHORT).show();
-                            isOnFav();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(ReadStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    isOnFav();
-                }
-            });
+    private void isOnDownloads(String id) {
+
+        Cursor cursor = localDb.getStory(id);
+        cursor.moveToFirst();
+
+        if (cursor.getCount()>0){
+
+            isFav = true;
+            favIb.setImageResource(R.drawable.ic_delete_holo_dark);
+
+        }else {
+            isFav=false;
+            favIb.setImageResource(R.drawable.ic_download_holo_dark);
         }
 
     }
 
+    private void downloadOrRemove(final String id) {
 
+        if (isFav){
 
-    private void loadStory() {
+            pd.setMessage("removing...");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(ReadStoryActivity.this);
+            builder.setTitle("Are you sure?");
+            builder.setMessage("you want to delete this story from downloads?");
+            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    pd.show();
+                    pd.setCanceledOnTouchOutside(false);
+
+                    localDb.deleteStory(id);
+                    Toast.makeText(ReadStoryActivity.this, "Removed!", Toast.LENGTH_SHORT).show();
+                    isOnDownloads(id);
+                    pd.dismiss();
+                    finish();
+                }
+            });
+            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }else {
+
+            pd.setMessage("downloading...");
+            pd.show();
+            pd.setCanceledOnTouchOutside(false);
+
+            Bitmap bitmap = ((BitmapDrawable)storyImg.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            final byte[] data = baos.toByteArray();
+
+            localDb.insertStory(id,storyName,story,storyDate,data);
+
+            Toast.makeText(ReadStoryActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+            isOnDownloads(id);
+            pd.dismiss();
+
+        }
+
+    }
+
+    private void loadStoryOnline(String id) {
 
         pd.setMessage("Loading...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("story");
-        Query query = ref.orderByChild("storyId").equalTo(storyId);
+        Query query = ref.orderByChild("storyId").equalTo(id);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

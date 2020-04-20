@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.download;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FavStoryAdapter extends RecyclerView.Adapter<FavStoryAdapter.FavStoryViewHolder> {
+import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.ReadStoryActivity;
+
+public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStoryAdapter.FavStoryViewHolder> {
 
     Context context;
     Cursor cursor;
 
-    public FavStoryAdapter(Context context, Cursor cursor) {
+    public DownloadedStoryAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
     }
@@ -42,10 +45,10 @@ public class FavStoryAdapter extends RecyclerView.Adapter<FavStoryAdapter.FavSto
             return;
         }
 
-        final String storyId = cursor.getString(cursor.getColumnIndex(FavStoryContract.FavStoryEntry.KEY_ID));
-        final String storyName = cursor.getString(cursor.getColumnIndex(FavStoryContract.FavStoryEntry.KEY_NAME));
-        String storyDate = cursor.getString(cursor.getColumnIndex(FavStoryContract.FavStoryEntry.KEY_DATE));
-        byte[] storyImage = cursor.getBlob(cursor.getColumnIndex(FavStoryContract.FavStoryEntry.KEY_IMAGE));
+        final String storyId = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_ID));
+        final String storyName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_NAME));
+        String storyDate = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_DATE));
+        byte[] storyImage = cursor.getBlob(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_IMAGE));
 
         Bitmap bmp = BitmapFactory.decodeByteArray(storyImage, 0, storyImage.length);
 
@@ -73,6 +76,7 @@ public class FavStoryAdapter extends RecyclerView.Adapter<FavStoryAdapter.FavSto
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, ReadStoryActivity.class);
+                intent.putExtra("isOnlineOffline", "offline");
                 intent.putExtra("storyId",storyId);
                 context.startActivity(intent);
             }

@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.home;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,11 +22,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.ReadStoryActivity;
+import com.alakamandawalk.pkadmin.model.StoryData;
+import com.alakamandawalk.pkadmin.UpdateStoryActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -97,6 +100,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, ReadStoryActivity.class);
+                intent.putExtra("isOnlineOffline", "online");
                 intent.putExtra("storyId",storyId);
                 context.startActivity(intent);
             }

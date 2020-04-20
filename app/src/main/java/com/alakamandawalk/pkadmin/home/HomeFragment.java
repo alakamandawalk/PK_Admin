@@ -1,10 +1,16 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.home;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.DashboardActivity;
+import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.download.DownloadFragment;
+import com.alakamandawalk.pkadmin.model.StoryData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,7 +67,7 @@ public class HomeFragment extends Fragment {
 
         storyList = new ArrayList<>();
 
-        loadStories();
+        checkNetworkStatus();
 
         return view;
     }
@@ -90,6 +100,21 @@ public class HomeFragment extends Fragment {
                 pd.dismiss();
             }
         });
+
+    }
+
+    public void checkNetworkStatus(){
+
+        ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
+                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
+            loadStories();
+        }
+        else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+
+        }
 
     }
 }

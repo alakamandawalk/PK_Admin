@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home_light"
+        android:icon="@drawable/ic_home_holo_dark"
         android:title="home" />
 
     <item android:id="@+id/nav_fav"
-        android:icon="@drawable/ic_fav_boder_light"
-        android:title="fav" />
+        android:icon="@drawable/ic_storage_holo_dark"
+        android:title="downloads" />
 
-    <item android:id="@+id/nav_search"
-        android:icon="@drawable/ic_search_light"
-        android:title="search" />
+    <item android:id="@+id/nav_explore"
+        android:icon="@drawable/ic_explore_holo_dark"
+        android:title="explore" />
 
 </menu>

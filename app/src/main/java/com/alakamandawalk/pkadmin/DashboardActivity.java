@@ -3,14 +3,13 @@ package com.alakamandawalk.pkadmin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -20,21 +19,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.alakamandawalk.pkadmin.download.DownloadFragment;
+import com.alakamandawalk.pkadmin.explore.ExploreFragment;
+import com.alakamandawalk.pkadmin.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -66,11 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        titleTv.setText("Home");
-        HomeFragment homeFragment = new HomeFragment();
-        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
-        ft1.replace(R.id.frameLayout, homeFragment, "");
-        ft1.commit();
+        loadFirstActivity();
 
         menuIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,15 +108,15 @@ public class DashboardActivity extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
 
             switch (item.getItemId()){
-                case R.id.nav_search:
+                case R.id.nav_explore:
 
                     titleTv.setText("Explore");
-                    SearchFragment searchFragment = new SearchFragment();
+                    ExploreFragment exploreFragment = new ExploreFragment();
                     FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
-                    ft3.replace(R.id.frameLayout, searchFragment, "");
+                    ft3.replace(R.id.frameLayout, exploreFragment, "");
                     ft3.commit();
                     return true;
 
@@ -140,14 +127,45 @@ public class DashboardActivity extends AppCompatActivity {
                     FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                     ft1.replace(R.id.frameLayout, homeFragment, "");
                     ft1.commit();
+
+                    ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
+                            || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
+
+                    }
+                    else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+                            || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                        builder.setTitle("Not Connected!");
+                        builder.setMessage("you can still read downloaded stories!");
+                        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                titleTv.setText("Downloads");
+                                DownloadFragment downloadFragment = new DownloadFragment();
+                                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                                ft2.replace(R.id.frameLayout, downloadFragment, "");
+                                ft2.commit();
+                                item.setChecked(true);
+
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
                     return true;
 
                 case R.id.nav_fav:
 
-                    titleTv.setText("Favorites");
-                    FavoriteFragment favoriteFragment = new FavoriteFragment();
+                    titleTv.setText("Downloads");
+                    DownloadFragment downloadFragment = new DownloadFragment();
                     FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                    ft2.replace(R.id.frameLayout, favoriteFragment, "");
+                    ft2.replace(R.id.frameLayout, downloadFragment, "");
                     ft2.commit();
                     return true;
             }
@@ -169,4 +187,43 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    public void loadFirstActivity(){
+
+        titleTv.setText("Home");
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+        ft1.replace(R.id.frameLayout, homeFragment, "");
+        ft1.commit();
+
+        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
+                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
+
+
+        }
+        else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
+                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+            builder.setTitle("Not Connected!");
+            builder.setMessage("you can still read downloaded stories!");
+            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    titleTv.setText("Downloads");
+                    DownloadFragment downloadFragment = new DownloadFragment();
+                    FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                    ft2.replace(R.id.frameLayout, downloadFragment, "");
+                    ft2.commit();
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+    }
 }

@@ -1,7 +1,5 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.download;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,25 +9,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.alakamandawalk.pkadmin.localdb.DBHelper;
+import com.alakamandawalk.pkadmin.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavoriteFragment extends Fragment {
+public class DownloadFragment extends Fragment {
 
     DBHelper dbHelper;
 
     RecyclerView favStoryRv;
-    FavStoryAdapter favStoryAdapter;
+    DownloadedStoryAdapter downloadedStoryAdapter;
 
-    public FavoriteFragment() {
+    public DownloadFragment() {
         // Required empty public constructor
     }
 
@@ -57,8 +52,8 @@ public class FavoriteFragment extends Fragment {
 
     private void loadStories() {
 
-        favStoryAdapter = new FavStoryAdapter(getActivity(), dbHelper.getAllStories());
-        favStoryRv.setAdapter(favStoryAdapter);
+        downloadedStoryAdapter = new DownloadedStoryAdapter(getActivity(), dbHelper.getAllStories());
+        favStoryRv.setAdapter(downloadedStoryAdapter);
 
     }
 

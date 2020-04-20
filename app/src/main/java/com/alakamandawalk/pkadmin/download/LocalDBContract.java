@@ -1,12 +1,12 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.download;
 
 import android.provider.BaseColumns;
 
-public class FavStoryContract {
+public class LocalDBContract {
 
-    public static final class FavStoryEntry implements BaseColumns{
+    public static final class LocalDBEntry implements BaseColumns{
 
-        private FavStoryEntry(){}
+        private LocalDBEntry(){}
 
         public static final String TABLE_NAME = "fav_story";
         public static final String KEY_ID = "storyId";

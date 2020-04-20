@@ -22,7 +22,7 @@
                 android:id="@+id/backIb"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/ic_arrow_back_holo_dark"
                 android:background="@drawable/round_background"
                 android:layout_margin="5dp"/>
 
