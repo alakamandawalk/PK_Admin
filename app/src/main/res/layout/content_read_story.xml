@@ -26,13 +26,25 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textAlignment="textEnd"
-                android:text="01/04/2020"
                 android:padding="5dp"
                 android:layout_alignParentBottom="true"
                 android:textColor="#ffffff"
                 android:background="#99999999"/>
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#333333"
+            android:paddingTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="10dp"
+            android:textColor="#ffffff"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/storyTv"

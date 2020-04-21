@@ -84,15 +84,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             Picasso.get().load(R.drawable.img_place_holder).into(holder.storyImageIv);
         }
 
-        if (storyName.length()>27){
-
-            holder.storyNameTv.setText(storyName.substring(0,25)+"...");
-
-        }else {
-
-            holder.storyNameTv.setText(storyName);
-        }
-
+        holder.storyNameTv.setText(storyName);
         holder.storyDateTv.setText(storyDate);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

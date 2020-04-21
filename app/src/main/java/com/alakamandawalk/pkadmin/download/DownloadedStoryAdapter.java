@@ -34,7 +34,7 @@ public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStory
     @Override
     public FavStoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.fav_story_row, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.download_story_row, parent, false);
         return new FavStoryViewHolder(view);
     }
 

@@ -127,18 +127,8 @@ public class ReadStoryActivity extends AppCompatActivity {
             storyImg.setImageResource(R.drawable.img_place_holder);
         }
 
-
-        if (storyName.length()>27){
-
-            titleTv.setText(storyName.substring(0,25)+"...");
-
-        }else {
-
-            titleTv.setText(storyName);
-        }
-
+        titleTv.setText(storyName);
         storyTv.setText(story);
-
         dateTv.setText(storyDate);
 
     }
@@ -248,18 +238,9 @@ public class ReadStoryActivity extends AppCompatActivity {
                         Picasso.get().load(R.drawable.img_place_holder).into(storyImg);
                     }
 
-                    if (storyName.length()>30){
-
-                        titleTv.setText(storyName.substring(0,28)+"...");
-
-                    }else {
-
-                        titleTv.setText(storyName);
-                    }
-
+                    titleTv.setText(storyName);
                     storyTv.setText(story);
                     dateTv.setText(storyDate);
-
                 }
 
                 pd.dismiss();

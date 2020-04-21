@@ -6,9 +6,8 @@
     android:orientation="vertical"
     android:id="@+id/favStoryCv"
     app:cardElevation="2dp"
-    app:contentPadding="5dp"
     android:background="#ffffff"
-    app:cardCornerRadius="3dp"
+    app:cardCornerRadius="4dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp">
@@ -42,7 +41,7 @@
                     android:textSize="20sp"
                     android:padding="5dp"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="5dp"/>
+                    android:lineSpacingExtra="10dp"/>
 
                 <TextView
                     android:id="@+id/storyDateTv"

@@ -6,6 +6,6 @@
     tools:context=".download.DownloadFragment"
     android:background="@color/colorPrimaryDark">
 
-    <include layout="@layout/content_favorite"/>
+    <include layout="@layout/content_download"/>
 
 </FrameLayout>
