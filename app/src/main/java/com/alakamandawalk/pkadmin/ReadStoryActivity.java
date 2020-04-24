@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alakamandawalk.pkadmin.download.LocalDBContract;
+import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -62,7 +62,6 @@ public class ReadStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_read_story);
 
         Intent intent = getIntent();
-        String isOnlineOffline = intent.getStringExtra("isOnlineOffline");
         final String storyId = intent.getStringExtra("storyId");
 
         localDb = new DBHelper(this);
@@ -77,14 +76,6 @@ public class ReadStoryActivity extends AppCompatActivity {
         dateTv = findViewById(R.id.dateTv);
 
         checkUserStatus();
-
-        if (isOnlineOffline.equals("online")){
-            loadStoryOnline(storyId);
-        }
-
-        if (isOnlineOffline.equals("offline")){
-            loadStoryOffline(storyId);
-        }
 
         isOnDownloads(storyId);
 
@@ -142,10 +133,12 @@ public class ReadStoryActivity extends AppCompatActivity {
 
             isFav = true;
             favIb.setImageResource(R.drawable.ic_delete_holo_dark);
+            loadStoryOffline(id);
 
         }else {
             isFav=false;
             favIb.setImageResource(R.drawable.ic_download_holo_dark);
+            loadStoryOnline(id);
         }
 
     }

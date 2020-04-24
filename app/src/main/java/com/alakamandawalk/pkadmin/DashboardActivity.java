@@ -64,14 +64,14 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuIb, Gravity.END);
-                popupMenu.getMenu().add(Menu.NONE, 0,0,"New Story");
+                popupMenu.getMenu().add(Menu.NONE, 0,0,"New");
                 popupMenu.getMenu().add(Menu.NONE, 1,1,"Sign Out");
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         int id = item.getItemId();
                         if (id==0){
-                            startActivity(new Intent(DashboardActivity.this, NewStoryActivity.class));
+                            startActivity(new Intent(DashboardActivity.this, NewActivity.class));
                         }
                         if (id == 1){
 

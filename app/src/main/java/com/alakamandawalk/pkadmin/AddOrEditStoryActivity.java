@@ -20,15 +20,19 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +45,12 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UpdateStoryActivity extends AppCompatActivity {
+public class AddOrEditStoryActivity extends AppCompatActivity {
+
+    FirebaseAuth firebaseAuth;
 
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
@@ -55,34 +62,50 @@ public class UpdateStoryActivity extends AppCompatActivity {
 
     Uri image_uri = null;
 
-    ImageButton backIb;
+    String editStoryName, editStory, editStoryImage;
 
-    ImageView editStoryImgIv;
-    EditText editStoryNameEt, editStoryEt;
-    Button updateBtn;
-
-    String storyId;
-
-    String editStoryName;
-    String editStory;
-    String editStoryImage;
-
+    ImageView storyImgIv;
+    TextInputEditText storyNameEt, newStoryEt;
+    TextView toolBarTitleTv;
+    Button publishStoryBtn;
     ProgressDialog pd;
+    ImageButton backIb;
+    Spinner categorySpinner, playlistSpinner;
+
+    ArrayList<String> categoryList;
+    ArrayList<String> playlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_story);
+        setContentView(R.layout.activity_add_or_edit_story);
 
         Intent intent = getIntent();
-        storyId = intent.getStringExtra("storyId");
+        final String addOrEditKey = intent.getStringExtra("addOrEditKey");
+        final String storyId = intent.getStringExtra("storyId");
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        storyImgIv = findViewById(R.id.storyImgIv);
+        storyNameEt = findViewById(R.id.storyNameEt);
+        newStoryEt = findViewById(R.id.newStoryEt);
+        toolBarTitleTv = findViewById(R.id.toolBarTitleTv);
+        publishStoryBtn = findViewById(R.id.publishStoryBtn);
         backIb = findViewById(R.id.backIb);
-        editStoryImgIv = findViewById(R.id.editStoryImgIv);
-        editStoryNameEt = findViewById(R.id.editStoryNameEt);
-        editStoryEt = findViewById(R.id.editStoryEt);
-        updateBtn = findViewById(R.id.updateBtn);
+        categorySpinner = findViewById(R.id.categorySpinner);
+        playlistSpinner = findViewById(R.id.playlistSpinner);
+
         pd = new ProgressDialog(this);
+
+        storyImgIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImagePicDialog();
+            }
+        });
 
         backIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,43 +114,64 @@ public class UpdateStoryActivity extends AppCompatActivity {
             }
         });
 
-        loadStoryData();
+        categoryList = new ArrayList<>();
+        playlist = new ArrayList<>();
 
-        editStoryImgIv.setOnClickListener(new View.OnClickListener() {
+        loadCategories();
+        loadPlaylists();
+
+        if (addOrEditKey.equals("update")){
+
+            toolBarTitleTv.setText("Edit Story");
+            publishStoryBtn.setText("update story");
+            loadStoryData(storyId);
+
+        }else{
+
+            toolBarTitleTv.setText("Add Story");
+            publishStoryBtn.setText("publish story");
+        }
+
+        publishStoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImagePicDialog();
+
+                String storyName = storyNameEt.getText().toString().trim();
+                String story = newStoryEt.getText().toString().trim();
+                String categoryId = categorySpinner.getSelectedItem().toString();
+                String playlistId = playlistSpinner.getSelectedItem().toString();
+
+                if(TextUtils.isEmpty(storyName)){
+                    Toast.makeText(AddOrEditStoryActivity.this, "story name is empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(story)){
+                    Toast.makeText(AddOrEditStoryActivity.this, "story is empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (addOrEditKey.equals("update")){
+
+                    updateStory(storyName, story, categoryId, playlistId, storyId);
+                }else{
+
+                    uploadData(storyName, story, categoryId, playlistId);
+                }
+
+
+
             }
         });
 
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String editedName = editStoryNameEt.getText().toString().trim();
-                String editedStory = editStoryEt.getText().toString().trim();
-
-                if(TextUtils.isEmpty(editedName)){
-                    Toast.makeText(UpdateStoryActivity.this, "story name is empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(TextUtils.isEmpty(editedStory)){
-                    Toast.makeText(UpdateStoryActivity.this, "story is empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                updateStory(editedName, editedStory, image_uri);
-            }
-        });
     }
 
-    private void updateStory(final String editedName, final String editedStory, final Uri uri) {
+    private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId) {
 
         pd.setMessage("Updating...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
-        Bitmap bitmap = ((BitmapDrawable)editStoryImgIv.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable)storyImgIv.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         final byte[] data = baos.toByteArray();
@@ -156,9 +200,11 @@ public class UpdateStoryActivity extends AppCompatActivity {
 
                                             HashMap<String, Object> hashMap = new HashMap<>();
 
-                                            hashMap.put("storyName", editedName);
-                                            hashMap.put("story", editedStory);
+                                            hashMap.put("storyName", storyName);
+                                            hashMap.put("story", story);
                                             hashMap.put("storyImage", downloadUrl);
+                                            hashMap.put("storyCategoryId", categoryId);
+                                            hashMap.put("storyPlaylistId", playlistId);
 
                                             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
                                             dbRef.child(storyId)
@@ -168,8 +214,8 @@ public class UpdateStoryActivity extends AppCompatActivity {
                                                         public void onSuccess(Void aVoid) {
                                                             pd.dismiss();
 
-                                                            Toast.makeText(UpdateStoryActivity.this, "story updated :)", Toast.LENGTH_SHORT).show();
-                                                            startActivity(new Intent(UpdateStoryActivity.this, DashboardActivity.class));
+                                                            Toast.makeText(AddOrEditStoryActivity.this, "story updated!", Toast.LENGTH_SHORT).show();
+                                                            startActivity(new Intent(AddOrEditStoryActivity.this, DashboardActivity.class));
                                                             finish();
 
                                                         }
@@ -177,7 +223,7 @@ public class UpdateStoryActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     pd.dismiss();
-                                                    Toast.makeText(UpdateStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(AddOrEditStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                         }
@@ -186,20 +232,21 @@ public class UpdateStoryActivity extends AppCompatActivity {
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(UpdateStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddOrEditStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UpdateStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddOrEditStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 pd.dismiss();
             }
         });
+
     }
 
-    private void loadStoryData() {
+    private void loadStoryData(String storyId) {
 
         pd.setMessage("Loading...");
         pd.show();
@@ -217,8 +264,8 @@ public class UpdateStoryActivity extends AppCompatActivity {
                     editStory = ds.child("story").getValue().toString();
                     editStoryImage = ds.child("storyImage").getValue().toString();
 
-                    editStoryNameEt.setText(editStoryName);
-                    editStoryEt.setText(editStory);
+                    storyNameEt.setText(editStoryName);
+                    newStoryEt.setText(editStory);
 
                     try {
                         Picasso.get()
@@ -226,9 +273,9 @@ public class UpdateStoryActivity extends AppCompatActivity {
                                 .placeholder(R.drawable.img_place_holder)
                                 .fit()
                                 .centerCrop()
-                                .into(editStoryImgIv);
+                                .into(storyImgIv);
                     }catch (Exception e){
-                        Picasso.get().load(R.drawable.img_place_holder).into(editStoryImgIv);
+                        Picasso.get().load(R.drawable.img_place_holder).into(storyImgIv);
                     }
                 }
 
@@ -238,7 +285,125 @@ public class UpdateStoryActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 pd.dismiss();
-                Toast.makeText(UpdateStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddOrEditStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadCategories() {
+
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("category");
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+
+                    String categoryId = ds.child("categoryId").getValue().toString();
+                    categoryList.add(categoryId);
+                    ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(AddOrEditStoryActivity.this, R.layout.spinner_item, categoryList);
+                    categorySpinner.setAdapter(categoryAdapter);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AddOrEditStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void loadPlaylists() {
+
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("playlist");
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+
+                    String playlistId = ds.child("playlistId").getValue().toString();
+                    playlist.add(playlistId);
+                    ArrayAdapter<String> playlistAdapter = new ArrayAdapter<>(AddOrEditStoryActivity.this, R.layout.spinner_item, playlist);
+                    playlistSpinner.setAdapter(playlistAdapter);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AddOrEditStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void uploadData(final String storyName, final String story, final String categoryId, final String playlistId) {
+
+        pd.setMessage("uploading new story...");
+        pd.show();
+        pd.setCanceledOnTouchOutside(false);
+
+        Bitmap bitmap = ((BitmapDrawable)storyImgIv.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        final String timeStamp = String.valueOf(System.currentTimeMillis());
+
+        String filePathAndName = "story/" + "story_" + timeStamp;
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+        storageReference.putBytes(data)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
+
+                        String downloadUrl = uriTask.getResult().toString();
+
+                        if (uriTask.isSuccessful()){
+                            HashMap<Object, String> hashMap = new HashMap<>();
+                            hashMap.put("storyId", timeStamp);
+                            hashMap.put("storyName", storyName);
+                            hashMap.put("story", story);
+                            hashMap.put("storyDate", timeStamp);
+                            hashMap.put("storyImage", downloadUrl);
+                            hashMap.put("storyCategoryId", categoryId);
+                            hashMap.put("storyPlaylistId", playlistId);
+
+                            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
+                            dbRef.child(timeStamp).setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                            pd.dismiss();
+                                            Toast.makeText(AddOrEditStoryActivity.this, "story uploaded!", Toast.LENGTH_SHORT).show();
+
+                                            startActivity(new Intent(AddOrEditStoryActivity.this, DashboardActivity.class));
+                                            finish();
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    pd.dismiss();
+                                    Toast.makeText(AddOrEditStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
+                Toast.makeText(AddOrEditStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -366,13 +531,13 @@ public class UpdateStoryActivity extends AppCompatActivity {
             if (requestCode == IMAGE_PICK_GALLERY_CODE){
                 image_uri =data.getData();
 
-                editStoryImgIv.setImageURI(image_uri);
+                storyImgIv.setImageURI(image_uri);
 
             }
 
             if (requestCode == IMAGE_PICK_CAMERA_CODE){
 
-                editStoryImgIv.setImageURI(image_uri);
+                storyImgIv.setImageURI(image_uri);
 
             }
         }

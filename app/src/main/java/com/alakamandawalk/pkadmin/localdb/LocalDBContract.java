@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin.download;
+package com.alakamandawalk.pkadmin.localdb;
 
 import android.provider.BaseColumns;
 

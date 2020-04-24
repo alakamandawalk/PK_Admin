@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.playlist;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,29 +20,32 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NewStoryActivity extends AppCompatActivity {
-
-    FirebaseAuth firebaseAuth;
+public class NewPlaylistActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
@@ -54,32 +57,32 @@ public class NewStoryActivity extends AppCompatActivity {
 
     Uri image_uri = null;
 
-    ImageView storyImgIv;
-    TextInputEditText storyNameEt, newStoryEt;
-    Button publishBtn;
-    ProgressDialog pd;
     ImageButton backIb;
+    ImageView playlistImgIv;
+    EditText playlistIdEt, playlistNameEt;
+    Spinner categorySpinner;
+    Button publishPlaylistBtn;
+    ProgressDialog pd;
+
+    ArrayList<String> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_story);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-
+        setContentView(R.layout.activity_new_playlist);
 
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        storyImgIv = findViewById(R.id.storyImgIv);
-        storyNameEt = findViewById(R.id.storyNameEt);
-        newStoryEt = findViewById(R.id.newStoryEt);
-        publishBtn = findViewById(R.id.publishBtn);
         backIb = findViewById(R.id.backIb);
-
+        playlistImgIv = findViewById(R.id.playlistImgIv);
+        playlistIdEt = findViewById(R.id.playlistIdEt);
+        playlistNameEt = findViewById(R.id.playlistNameEt);
+        categorySpinner = findViewById(R.id.categorySpinner);
+        publishPlaylistBtn = findViewById(R.id.publishPlaylistBtn);
         pd = new ProgressDialog(this);
 
-        storyImgIv.setOnClickListener(new View.OnClickListener() {
+        playlistImgIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showImagePicDialog();
@@ -93,44 +96,48 @@ public class NewStoryActivity extends AppCompatActivity {
             }
         });
 
-        publishBtn.setOnClickListener(new View.OnClickListener() {
+        categoryList = new ArrayList<>();
+
+        loadCategories();
+
+        publishPlaylistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String storyName = storyNameEt.getText().toString().trim();
-                String story = newStoryEt.getText().toString().trim();
+                String playlistId = playlistIdEt.getText().toString().trim();
+                String playlistName = playlistNameEt.getText().toString().trim();
+                String playlistCategory = categorySpinner.getSelectedItem().toString();
 
-                if(TextUtils.isEmpty(storyName)){
-                    Toast.makeText(NewStoryActivity.this, "story name is empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(TextUtils.isEmpty(story)){
-                    Toast.makeText(NewStoryActivity.this, "story is empty!", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(playlistId)){
+                    Toast.makeText(NewPlaylistActivity.this, "playlist id is empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                uploadData(storyName, story);
+                if(TextUtils.isEmpty(playlistName)){
+                    Toast.makeText(NewPlaylistActivity.this, "playlist name is empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
+                uploadData(playlistId, playlistName, playlistCategory);
 
             }
         });
-
     }
 
-    private void uploadData(final String storyName, final String story) {
+    private void uploadData(String playlistId, final String playlistName, final String playlistCategory) {
 
-        pd.setMessage("uploading new story...");
+        pd.setMessage("adding new playlist...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
-        Bitmap bitmap = ((BitmapDrawable)storyImgIv.getDrawable()).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable)playlistImgIv.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        final String timeStamp = String.valueOf(System.currentTimeMillis());
+        final String newPlaylistId = playlistId.toLowerCase().replaceAll("\\s+","");
 
-        String filePathAndName = "story/" + "story_" + timeStamp;
+        String filePathAndName = "playlist/" + "playlist_" + playlistId;
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
         storageReference.putBytes(data)
@@ -144,30 +151,29 @@ public class NewStoryActivity extends AppCompatActivity {
 
                         if (uriTask.isSuccessful()){
                             HashMap<Object, String> hashMap = new HashMap<>();
-                            hashMap.put("storyId", timeStamp);
-                            hashMap.put("storyName", storyName);
-                            hashMap.put("story", story);
-                            hashMap.put("storyDate", timeStamp);
-                            hashMap.put("storyImage", downloadUrl);
+                            hashMap.put("playlistId", newPlaylistId);
+                            hashMap.put("playlistName", playlistName);
+                            hashMap.put("playlistImage", downloadUrl);
+                            hashMap.put("playlistCategory", playlistCategory);
 
-                            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
-                            dbRef.child(timeStamp).setValue(hashMap)
+                            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("playlist");
+                            dbRef.child(newPlaylistId).setValue(hashMap)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
 
                                             pd.dismiss();
-                                            Toast.makeText(NewStoryActivity.this, "story uploaded :)", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(NewPlaylistActivity.this, "playlist added!", Toast.LENGTH_SHORT).show();
 
-                                            startActivity(new Intent(NewStoryActivity.this, DashboardActivity.class));
-                                            finish();
+                                            playlistIdEt.getText().clear();
+                                            playlistNameEt.getText().clear();
 
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     pd.dismiss();
-                                    Toast.makeText(NewStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(NewPlaylistActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -177,7 +183,33 @@ public class NewStoryActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 pd.dismiss();
-                Toast.makeText(NewStoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPlaylistActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void loadCategories() {
+
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("category");
+        categoryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+
+                    String categoryId = ds.child("categoryId").getValue().toString();
+                    categoryList.add(categoryId);
+                    ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(NewPlaylistActivity.this, R.layout.spinner_item, categoryList);
+                    categorySpinner.setAdapter(categoryAdapter);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(NewPlaylistActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -305,13 +337,13 @@ public class NewStoryActivity extends AppCompatActivity {
             if (requestCode == IMAGE_PICK_GALLERY_CODE){
                 image_uri =data.getData();
 
-                storyImgIv.setImageURI(image_uri);
+                playlistImgIv.setImageURI(image_uri);
 
             }
 
             if (requestCode == IMAGE_PICK_CAMERA_CODE){
 
-                storyImgIv.setImageURI(image_uri);
+                playlistImgIv.setImageURI(image_uri);
 
             }
         }

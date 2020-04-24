@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:id="@+id/categoryCv"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp"
+    android:layout_marginLeft="7dp"
+    android:layout_marginRight="7dp">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/categoryIv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/img_place_holder"
+            android:scaleType="centerCrop"/>
+
+        <ImageButton
+            android:id="@+id/optionIb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu_dark"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/categoryNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:background="#992c2c2c"
+            android:layout_alignParentBottom="true"/>
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

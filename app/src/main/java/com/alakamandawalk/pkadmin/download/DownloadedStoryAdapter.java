@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.ReadStoryActivity;
+import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 
 public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStoryAdapter.FavStoryViewHolder> {
 
@@ -76,7 +77,6 @@ public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStory
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, ReadStoryActivity.class);
-                intent.putExtra("isOnlineOffline", "offline");
                 intent.putExtra("storyId",storyId);
                 context.startActivity(intent);
             }

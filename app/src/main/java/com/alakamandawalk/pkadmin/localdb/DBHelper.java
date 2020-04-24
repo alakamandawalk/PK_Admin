@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.alakamandawalk.pkadmin.download.LocalDBContract.*;
+import com.alakamandawalk.pkadmin.localdb.LocalDBContract.*;
 
 import androidx.annotation.Nullable;
 

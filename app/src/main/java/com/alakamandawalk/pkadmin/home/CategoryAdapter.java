@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,9 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alakamandawalk.pkadmin.AddOrEditStoryActivity;
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.ReadStoryActivity;
-import com.alakamandawalk.pkadmin.model.StoryData;
-import com.alakamandawalk.pkadmin.playlist.PlaylistActivity;
+import com.alakamandawalk.pkadmin.model.CategoryData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -38,75 +35,46 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
-public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHolder>{
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>{
 
     Context context;
-    List<StoryData> storyDataList;
+    List<CategoryData> categoryList;
 
-    public StoryAdapter(Context context, List<StoryData> storyDataList) {
+    public CategoryAdapter(Context context, List<CategoryData> categoryList) {
         this.context = context;
-        this.storyDataList = storyDataList;
+        this.categoryList = categoryList;
     }
 
     @NonNull
     @Override
-    public StoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.story_row, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.category_row, parent, false);
 
-        return new StoryViewHolder(view);
+        return new CategoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final StoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
 
-        final String storyId = storyDataList.get(position).getStoryId();
-        final String storyImage = storyDataList.get(position).getStoryImage();
-        String storyName = storyDataList.get(position).getStoryName();
-        String timeStamp = storyDataList.get(position).getStoryDate();
-        final String playlistId = storyDataList.get(position).getStoryPlaylistId();
-
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        calendar.setTimeInMillis(Long.parseLong(timeStamp));
-        String storyDate = DateFormat.format("dd/MM/yyyy", calendar).toString();
+        String categoryName = categoryList.get(position).getCategoryName();
+        final String categoryImage = categoryList.get(position).getCategoryImage();
+        final String categoryId = categoryList.get(position).getCategoryId();
 
         try {
             Picasso.get()
-                    .load(storyImage)
+                    .load(categoryImage)
                     .placeholder(R.drawable.img_place_holder)
                     .fit()
                     .centerCrop()
-                    .into(holder.storyImageIv);
+                    .into(holder.categoryIv);
         }catch (Exception e){
-            Picasso.get().load(R.drawable.img_place_holder).into(holder.storyImageIv);
+            Picasso.get().load(R.drawable.img_place_holder).into(holder.categoryIv);
         }
 
-        holder.storyNameTv.setText(storyName);
-        holder.storyDateTv.setText(storyDate);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (playlistId.equals("noplaylist")){
-
-                    Intent intent = new Intent(context, ReadStoryActivity.class);
-                    intent.putExtra("storyId",storyId);
-                    context.startActivity(intent);
-
-                }else{
-
-                    Intent intent = new Intent(context, PlaylistActivity.class);
-                    intent.putExtra("playlistId",playlistId);
-                    context.startActivity(intent);
-                }
-            }
-        });
+        holder.categoryNameTv.setText(categoryName);
 
         holder.optionIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +96,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            deleteStory(storyId, storyImage);
+                                            deleteCategory(categoryId, categoryImage);
                                         }
                                     });
                             builder.setNegativeButton("Cancel",
@@ -144,36 +112,36 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                         }
 
                         if (id==1){
-                            Intent intent = new Intent(context, AddOrEditStoryActivity.class);
-                            intent.putExtra("updateKey", "update");
-                            intent.putExtra("storyId",storyId);
-                            context.startActivity(intent);
+//                            Intent intent = new Intent(context, AddOrEditStoryActivity.class);
+//                            intent.putExtra("updateKey", "update");
+//                            intent.putExtra("categoryId",categoryId);
+//                            context.startActivity(intent);
                         }
 
                         return false;
                     }
                 });
                 popupMenu.show();
-
             }
         });
 
+
     }
 
-    private void deleteStory(final String storyId, String storyImage) {
+    private void deleteCategory(final String categoryId, String categoryImage) {
 
         final ProgressDialog pd = new ProgressDialog(context);
         pd.setMessage("Deleting...");
         pd.show();
         pd.setCanceledOnTouchOutside(false);
 
-        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(storyImage);
+        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(categoryImage);
         picRef.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-                        Query query = FirebaseDatabase.getInstance().getReference("story").orderByChild("storyId").equalTo(storyId);
+                        Query query = FirebaseDatabase.getInstance().getReference("category").orderByChild("categoryId").equalTo(categoryId);
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -181,7 +149,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                                     ds.getRef().removeValue();
 
                                     pd.dismiss();
-                                    Toast.makeText(context, "Story deleted :)", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "category deleted!", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -200,32 +168,27 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return storyDataList.size();
+        return categoryList.size();
     }
 
-    class StoryViewHolder extends RecyclerView.ViewHolder{
+    class CategoryViewHolder extends RecyclerView.ViewHolder{
 
-        CardView storyCv;
-        ImageView storyImageIv;
-        TextView storyNameTv, storyDateTv;
+        CardView categoryCv;
+        ImageView categoryIv;
         ImageButton optionIb;
+        TextView categoryNameTv;
 
-        public StoryViewHolder(@NonNull View itemView) {
+        public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            storyCv = itemView.findViewById(R.id.storyCv);
-            storyImageIv = itemView.findViewById(R.id.storyImageIv);
-            storyNameTv = itemView.findViewById(R.id.storyNameTv);
-            storyDateTv = itemView.findViewById(R.id.storyDateTv);
+            categoryCv = itemView.findViewById(R.id.categoryCv);
+            categoryIv = itemView.findViewById(R.id.categoryIv);
             optionIb = itemView.findViewById(R.id.optionIb);
-
+            categoryNameTv = itemView.findViewById(R.id.categoryNameTv);
         }
     }
 }
-
-
