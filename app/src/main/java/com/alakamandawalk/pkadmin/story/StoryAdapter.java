@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin.home;
+package com.alakamandawalk.pkadmin.story;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -22,9 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alakamandawalk.pkadmin.AddOrEditStoryActivity;
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.ReadStoryActivity;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.alakamandawalk.pkadmin.playlist.PlaylistActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -145,7 +143,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
                         if (id==1){
                             Intent intent = new Intent(context, AddOrEditStoryActivity.class);
-                            intent.putExtra("updateKey", "update");
+                            intent.putExtra("key", "edit");
                             intent.putExtra("storyId",storyId);
                             context.startActivity(intent);
                         }
@@ -208,12 +206,12 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         return storyDataList.size();
     }
 
-    class StoryViewHolder extends RecyclerView.ViewHolder{
+    public static class StoryViewHolder extends RecyclerView.ViewHolder{
 
-        CardView storyCv;
-        ImageView storyImageIv;
-        TextView storyNameTv, storyDateTv;
-        ImageButton optionIb;
+        public CardView storyCv;
+        public ImageView storyImageIv;
+        public TextView storyNameTv, storyDateTv;
+        public ImageButton optionIb;
 
         public StoryViewHolder(@NonNull View itemView) {
             super(itemView);

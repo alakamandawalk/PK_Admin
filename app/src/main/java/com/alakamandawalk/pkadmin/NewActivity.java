@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.alakamandawalk.pkadmin.category.NewCategoryActivity;
 import com.alakamandawalk.pkadmin.playlist.NewPlaylistActivity;
+import com.alakamandawalk.pkadmin.story.AddOrEditStoryActivity;
 
 public class NewActivity extends AppCompatActivity {
 
@@ -25,14 +27,18 @@ public class NewActivity extends AppCompatActivity {
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NewActivity.this, NewCategoryActivity.class));
+                Intent intent = new Intent(NewActivity.this, NewCategoryActivity.class);
+                intent.putExtra("key", "add");
+                startActivity(intent);
             }
         });
 
         newPlaylistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NewActivity.this, NewPlaylistActivity.class));
+                Intent intent = new Intent(NewActivity.this, NewPlaylistActivity.class);
+                intent.putExtra("key", "add");
+                startActivity(intent);
             }
         });
 
@@ -41,7 +47,7 @@ public class NewActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(NewActivity.this, AddOrEditStoryActivity.class);
-                intent.putExtra("addOrEditKey", "edit");
+                intent.putExtra("key", "add");
                 startActivity(intent);
             }
         });

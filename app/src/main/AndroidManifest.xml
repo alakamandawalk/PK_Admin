@@ -14,12 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".playlist.PlaylistActivity"></activity>
+        <activity android:name=".category.CategoryActivity"></activity>
+        <activity android:name=".playlist.PlaylistActivity" />
         <activity android:name=".playlist.NewPlaylistActivity" />
-        <activity android:name=".NewCategoryActivity" />
+        <activity android:name=".category.NewCategoryActivity" />
         <activity android:name=".NewActivity" />
-        <activity android:name=".ReadStoryActivity" />
-        <activity android:name=".AddOrEditStoryActivity" />
+        <activity android:name=".story.ReadStoryActivity" />
+        <activity android:name=".story.AddOrEditStoryActivity" />
         <activity android:name=".DashboardActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

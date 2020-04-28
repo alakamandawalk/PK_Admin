@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.alakamandawalk.pkadmin.category.CategoryActivity;
 import com.alakamandawalk.pkadmin.download.DownloadFragment;
 import com.alakamandawalk.pkadmin.explore.ExploreFragment;
 import com.alakamandawalk.pkadmin.home.HomeFragment;
@@ -32,7 +33,7 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
 
-    ImageButton menuIb;
+    ImageButton menuIb, searchIb;
     TextView titleTv;
 
     FrameLayout frameLayout;
@@ -53,11 +54,22 @@ public class DashboardActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(selectedListener);
 
         menuIb = findViewById(R.id.menuIb);
+        searchIb = findViewById(R.id.searchIb);
         titleTv = findViewById(R.id.titleTv);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         loadFirstActivity();
+
+        searchIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, CategoryActivity.class);
+                intent.putExtra("key", "search");
+                intent.putExtra("title","");
+                startActivity(intent);
+            }
+        });
 
         menuIb.setOnClickListener(new View.OnClickListener() {
             @Override

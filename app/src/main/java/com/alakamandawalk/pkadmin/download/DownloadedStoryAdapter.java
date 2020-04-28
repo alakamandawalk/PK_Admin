@@ -1,15 +1,21 @@
 package com.alakamandawalk.pkadmin.download;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +24,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.ReadStoryActivity;
+import com.alakamandawalk.pkadmin.category.NewCategoryActivity;
+import com.alakamandawalk.pkadmin.localdb.DBHelper;
+import com.alakamandawalk.pkadmin.story.ReadStoryActivity;
 import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 
 public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStoryAdapter.FavStoryViewHolder> {
@@ -40,7 +48,7 @@ public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStory
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavStoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final FavStoryViewHolder holder, int position) {
 
         if (!cursor.moveToPosition(position)){
             return;
@@ -82,6 +90,54 @@ public class DownloadedStoryAdapter extends RecyclerView.Adapter<DownloadedStory
             }
         });
 
+        holder.optionIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(context, holder.optionIb, Gravity.END);
+                popupMenu.getMenu().add(Menu.NONE, 0,0,"Delete");
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id==0){
+
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Delete");
+                            builder.setMessage("are you sure..?");
+                            builder.setPositiveButton("delete",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            deleteStory(storyId);
+                                        }
+                                    });
+                            builder.setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                        }
+
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+
+    }
+
+    private void deleteStory(String storyId) {
+
+        DBHelper localDb = new DBHelper(context);
+        localDb.deleteStory(storyId);
+        swapCursor(cursor);
     }
 
     @Override

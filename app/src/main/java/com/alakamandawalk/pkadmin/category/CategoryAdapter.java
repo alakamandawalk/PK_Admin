@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin.home;
+package com.alakamandawalk.pkadmin.category;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alakamandawalk.pkadmin.AddOrEditStoryActivity;
 import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.model.CategoryData;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,7 +58,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
 
-        String categoryName = categoryList.get(position).getCategoryName();
+        final String categoryName = categoryList.get(position).getCategoryName();
         final String categoryImage = categoryList.get(position).getCategoryImage();
         final String categoryId = categoryList.get(position).getCategoryId();
 
@@ -75,6 +74,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         }
 
         holder.categoryNameTv.setText(categoryName);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CategoryActivity.class);
+                intent.putExtra("key", "showCategoryList");
+                intent.putExtra("categoryId",categoryId);
+                intent.putExtra("title",categoryName);
+                context.startActivity(intent);
+            }
+        });
 
         holder.optionIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,10 +122,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                         }
 
                         if (id==1){
-//                            Intent intent = new Intent(context, AddOrEditStoryActivity.class);
-//                            intent.putExtra("updateKey", "update");
-//                            intent.putExtra("categoryId",categoryId);
-//                            context.startActivity(intent);
+                            Intent intent = new Intent(context, NewCategoryActivity.class);
+                            intent.putExtra("key", "edit");
+                            intent.putExtra("categoryId",categoryId);
+                            context.startActivity(intent);
                         }
 
                         return false;

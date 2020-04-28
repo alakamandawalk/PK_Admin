@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewCategoryActivity">
+    tools:context=".category.NewCategoryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,9 +39,9 @@
                         android:layout_gravity="center"/>
 
                     <TextView
+                        android:id="@+id/titleTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="new category"
                         android:textColor="#ffffff"
                         android:textSize="20sp"
                         android:gravity="center"/>
@@ -85,6 +85,14 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:id="@+id/categoryIdTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_marginTop="20dp"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,7 +114,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:text="publish category"
                     android:textColor="@color/colorAccent"
                     android:textSize="20sp"
                     android:layout_alignParentBottom="true"

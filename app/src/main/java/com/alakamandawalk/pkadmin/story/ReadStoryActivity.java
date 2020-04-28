@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.story;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.LoginActivity;
+import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.google.firebase.auth.FirebaseAuth;

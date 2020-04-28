@@ -1,4 +1,4 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.story;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -28,6 +29,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.DashboardActivity;
+import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -81,7 +84,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_or_edit_story);
 
         Intent intent = getIntent();
-        final String addOrEditKey = intent.getStringExtra("addOrEditKey");
+        final String addOrEditKey = intent.getStringExtra("key");
         final String storyId = intent.getStringExtra("storyId");
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -118,9 +121,8 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
         playlist = new ArrayList<>();
 
         loadCategories();
-        loadPlaylists();
 
-        if (addOrEditKey.equals("update")){
+        if (addOrEditKey.equals("edit")){
 
             toolBarTitleTv.setText("Edit Story");
             publishStoryBtn.setText("update story");
@@ -131,6 +133,22 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
             toolBarTitleTv.setText("Add Story");
             publishStoryBtn.setText("publish story");
         }
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                playlistSpinner.setAdapter(null);
+
+                String playlistCategory = parent.getItemAtPosition(position).toString();
+                loadPlaylists(playlistCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         publishStoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,19 +168,15 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (addOrEditKey.equals("update")){
+                if (addOrEditKey.equals("edit")){
 
                     updateStory(storyName, story, categoryId, playlistId, storyId);
                 }else{
 
                     uploadData(storyName, story, categoryId, playlistId);
                 }
-
-
-
             }
         });
-
     }
 
     private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId) {
@@ -194,9 +208,9 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                                         while (!uriTask.isSuccessful());
 
-                                        String downloadUrl = uriTask.getResult().toString();
-
                                         if (uriTask.isSuccessful()){
+
+                                            String downloadUrl = uriTask.getResult().toString();
 
                                             HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -315,13 +329,14 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
     }
 
-    private void loadPlaylists() {
+    private void loadPlaylists(String playlistCategory) {
 
-        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("playlist");
-        categoryRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference playlistRef = FirebaseDatabase.getInstance().getReference("playlist");
+        Query query = playlistRef.orderByChild("playlistCategory").equalTo(playlistCategory);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                playlist.clear();
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
 
                     String playlistId = ds.child("playlistId").getValue().toString();
@@ -330,7 +345,6 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                     playlistSpinner.setAdapter(playlistAdapter);
 
                 }
-
             }
 
             @Override
@@ -543,5 +557,29 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Are you sure?");
+        builder.setMessage("cancel editing and leave...");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

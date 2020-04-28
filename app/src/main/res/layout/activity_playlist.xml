@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".playlist.PlaylistActivity">
+    tools:context=".playlist.PlaylistActivity"
+    android:background="@color/colorPrimary">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -32,19 +33,52 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 android:background="#99000000">
 
-                <TextView
-                    android:id="@+id/playlistNameTv"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="10dp"
-                    android:textSize="18sp"
-                    android:textColor="#ffffff"/>
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+
+                        <ImageButton
+                            android:id="@+id/backIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_back_holo_dark"
+                            android:background="@null"
+                            android:layout_gravity="center"
+                            android:padding="10dp"/>
+
+                        <TextView
+                            android:id="@+id/playlistNameTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:layout_gravity="center"
+                            android:textColor="#ffffff"
+                            android:layout_marginLeft="10dp"/>
+
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/optionIb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_menu"
+                        android:background="@null"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="10dp"/>
+
+                </RelativeLayout>
 
             </androidx.appcompat.widget.Toolbar>
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_playlist_activity"/>
