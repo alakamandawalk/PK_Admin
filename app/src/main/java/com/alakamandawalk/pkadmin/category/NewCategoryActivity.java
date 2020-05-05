@@ -32,6 +32,7 @@ import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -332,7 +333,7 @@ public class NewCategoryActivity extends AppCompatActivity {
 
         String options[] = {"camera", "gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Pic from");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -464,15 +465,14 @@ public class NewCategoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
         builder.setTitle("Are you sure?");
         builder.setMessage("cancel editing and leave...");
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                NewCategoryActivity.super.onBackPressed();
             }
         });
         builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -482,7 +482,6 @@ public class NewCategoryActivity extends AppCompatActivity {
             }
         });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.create().show();
     }
 }

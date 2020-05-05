@@ -110,7 +110,7 @@ public class CategoryActivity extends AppCompatActivity {
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
                     StoryData storyData = ds.getValue(StoryData.class);
 
-                    if (storyData.getStoryName().contains(searchText)){
+                    if (storyData.getStoryName().contains(searchText) || storyData.getStorySearchTag().contains(searchText)){
                         storyDataList.add(storyData);
                     }
 

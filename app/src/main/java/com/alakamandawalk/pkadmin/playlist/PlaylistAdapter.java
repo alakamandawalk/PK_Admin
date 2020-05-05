@@ -1,6 +1,5 @@
 package com.alakamandawalk.pkadmin.playlist;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +24,7 @@ import com.alakamandawalk.pkadmin.story.StoryAdapter;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -106,7 +106,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<StoryAdapter.StoryView
                         int id = item.getItemId();
                         if (id==0){
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme);
                             builder.setTitle("Delete");
                             builder.setMessage("are you sure..?");
                             builder.setPositiveButton("delete",
@@ -123,8 +123,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<StoryAdapter.StoryView
 
                                         }
                                     });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            builder.create().show();
 
                         }
 

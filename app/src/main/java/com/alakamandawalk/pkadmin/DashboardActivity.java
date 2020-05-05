@@ -25,6 +25,7 @@ import com.alakamandawalk.pkadmin.download.DownloadFragment;
 import com.alakamandawalk.pkadmin.explore.ExploreFragment;
 import com.alakamandawalk.pkadmin.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -87,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
                         }
                         if (id == 1){
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DashboardActivity.this, R.style.AlertDialogTheme);
                             builder.setTitle("Sign Out");
                             builder.setMessage("are you sure..?");
                             builder.setPositiveButton("Sign out",
@@ -105,8 +106,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                                         }
                                     });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            builder.create().show();
                         }
 
                         return false;
@@ -149,7 +149,7 @@ public class DashboardActivity extends AppCompatActivity {
                     else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                             || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
 
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DashboardActivity.this, R.style.AlertDialogTheme);
                         builder.setTitle("Not Connected!");
                         builder.setMessage("you can still read downloaded stories!");
                         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -166,8 +166,7 @@ public class DashboardActivity extends AppCompatActivity {
                             }
                         });
 
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        builder.create().show();
                     }
 
                     return true;
@@ -217,7 +216,7 @@ public class DashboardActivity extends AppCompatActivity {
         else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
 
-            final AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
             builder.setTitle("Not Connected!");
             builder.setMessage("you can still read downloaded stories!");
             builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -233,8 +232,7 @@ public class DashboardActivity extends AppCompatActivity {
                 }
             });
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            builder.create().show();
         }
 
     }

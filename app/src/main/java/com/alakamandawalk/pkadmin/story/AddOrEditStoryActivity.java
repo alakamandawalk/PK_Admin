@@ -34,6 +34,7 @@ import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -65,10 +66,10 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
     Uri image_uri = null;
 
-    String editStoryName, editStory, editStoryImage;
+    String editStoryName, editStory, editStoryImage, editStorySearchTag;
 
     ImageView storyImgIv;
-    TextInputEditText storyNameEt, newStoryEt;
+    TextInputEditText storyNameEt, newStoryEt, searchTagEt;
     TextView toolBarTitleTv;
     Button publishStoryBtn;
     ProgressDialog pd;
@@ -94,6 +95,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
         storyImgIv = findViewById(R.id.storyImgIv);
         storyNameEt = findViewById(R.id.storyNameEt);
+        searchTagEt = findViewById(R.id.searchTagEt);
         newStoryEt = findViewById(R.id.newStoryEt);
         toolBarTitleTv = findViewById(R.id.toolBarTitleTv);
         publishStoryBtn = findViewById(R.id.publishStoryBtn);
@@ -155,12 +157,16 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String storyName = storyNameEt.getText().toString().trim();
+                String searchTag = searchTagEt.getText().toString().trim();
                 String story = newStoryEt.getText().toString().trim();
                 String categoryId = categorySpinner.getSelectedItem().toString();
-                String playlistId = playlistSpinner.getSelectedItem().toString();
 
                 if(TextUtils.isEmpty(storyName)){
                     Toast.makeText(AddOrEditStoryActivity.this, "story name is empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(searchTag)){
+                    Toast.makeText(AddOrEditStoryActivity.this, "search tag is empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(TextUtils.isEmpty(story)){
@@ -168,18 +174,24 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (addOrEditKey.equals("edit")){
+                if (!(playlistSpinner.getSelectedItem() == null)){
+                    String playlistId = playlistSpinner.getSelectedItem().toString();
 
-                    updateStory(storyName, story, categoryId, playlistId, storyId);
-                }else{
+                    if (addOrEditKey.equals("edit")){
 
-                    uploadData(storyName, story, categoryId, playlistId);
+                        updateStory(storyName, story, categoryId, playlistId, storyId, searchTag);
+                    }else{
+
+                        uploadData(storyName, story, categoryId, playlistId, searchTag);
+                    }
+                }else {
+                    Toast.makeText(AddOrEditStoryActivity.this, "haven't selected a playlist!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId) {
+     private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId, final String searchTag) {
 
         pd.setMessage("Updating...");
         pd.show();
@@ -219,6 +231,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                                             hashMap.put("storyImage", downloadUrl);
                                             hashMap.put("storyCategoryId", categoryId);
                                             hashMap.put("storyPlaylistId", playlistId);
+                                            hashMap.put("storySearchTag", searchTag);
 
                                             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
                                             dbRef.child(storyId)
@@ -277,8 +290,10 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                     editStoryName = ds.child("storyName").getValue().toString();
                     editStory = ds.child("story").getValue().toString();
                     editStoryImage = ds.child("storyImage").getValue().toString();
+                    editStorySearchTag = ds.child("storySearchTag").getValue().toString();
 
                     storyNameEt.setText(editStoryName);
+                    searchTagEt.setText(editStorySearchTag);
                     newStoryEt.setText(editStory);
 
                     try {
@@ -355,7 +370,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
     }
 
-    private void uploadData(final String storyName, final String story, final String categoryId, final String playlistId) {
+    private void uploadData(final String storyName, final String story, final String categoryId, final String playlistId, final String searchTag) {
 
         pd.setMessage("uploading new story...");
         pd.show();
@@ -389,6 +404,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                             hashMap.put("storyImage", downloadUrl);
                             hashMap.put("storyCategoryId", categoryId);
                             hashMap.put("storyPlaylistId", playlistId);
+                            hashMap.put("storySearchTag", searchTag);
 
                             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
                             dbRef.child(timeStamp).setValue(hashMap)
@@ -427,7 +443,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
         String options[] = {"camera", "gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
         builder.setTitle("Pic from");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -561,15 +577,14 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
         builder.setTitle("Are you sure?");
         builder.setMessage("cancel editing and leave...");
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                AddOrEditStoryActivity.super.onBackPressed();
             }
         });
         builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -579,7 +594,6 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
             }
         });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.create().show();
     }
 }

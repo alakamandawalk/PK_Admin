@@ -35,6 +35,7 @@ import com.alakamandawalk.pkadmin.category.NewCategoryActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -297,7 +298,7 @@ public class NewPlaylistActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        final String newPlaylistId = playlistId.toLowerCase().replaceAll("\\s+","");
+        final String newPlaylistId = (playlistId+playlistCategory).toLowerCase().replaceAll("\\s+","");
 
         String filePathAndName = "playlist/" + "playlist_" + playlistId;
 
@@ -381,7 +382,7 @@ public class NewPlaylistActivity extends AppCompatActivity {
 
         String options[] = {"camera", "gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
         builder.setTitle("Pic from");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -511,5 +512,26 @@ public class NewPlaylistActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
+        builder.setTitle("Are you sure?");
+        builder.setMessage("cancel editing and leave...");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                NewPlaylistActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
     }
 }

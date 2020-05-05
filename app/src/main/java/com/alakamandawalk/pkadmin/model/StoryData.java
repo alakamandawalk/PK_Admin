@@ -2,13 +2,13 @@ package com.alakamandawalk.pkadmin.model;
 
 public class StoryData {
 
-    private String story, storyName, storyId, storyDate, storyImage, storyCategoryId, storyPlaylistId;
+    private String story, storyName, storyId, storyDate, storyImage, storyCategoryId, storyPlaylistId, storySearchTag;
 
     public StoryData() {
 
     }
 
-    public StoryData(String story, String storyName, String storyId, String storyDate, String storyImage, String storyCategoryId, String storyPlaylistId) {
+    public StoryData(String story, String storyName, String storyId, String storyDate, String storyImage, String storyCategoryId, String storyPlaylistId, String storySearchTag) {
         this.story = story;
         this.storyName = storyName;
         this.storyId = storyId;
@@ -16,6 +16,7 @@ public class StoryData {
         this.storyImage = storyImage;
         this.storyCategoryId = storyCategoryId;
         this.storyPlaylistId = storyPlaylistId;
+        this.storySearchTag = storySearchTag;
     }
 
     public String getStory() {
@@ -72,5 +73,13 @@ public class StoryData {
 
     public void setStoryPlaylistId(String storyPlaylistId) {
         this.storyPlaylistId = storyPlaylistId;
+    }
+
+    public String getStorySearchTag() {
+        return storySearchTag;
+    }
+
+    public void setStorySearchTag(String storySearchTag) {
+        this.storySearchTag = storySearchTag;
     }
 }

@@ -27,6 +27,7 @@ import com.alakamandawalk.pkadmin.model.StoryData;
 import com.alakamandawalk.pkadmin.playlist.PlaylistActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -91,13 +92,23 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             @Override
             public void onClick(View v) {
 
-                if (playlistId.equals("noplaylist")){
+                if (playlistId.length()>9){
 
-                    Intent intent = new Intent(context, ReadStoryActivity.class);
-                    intent.putExtra("storyId",storyId);
-                    context.startActivity(intent);
+                    String checkedPlaylist = playlistId.substring(0,10);
 
-                }else{
+                    if (checkedPlaylist.equals("noplaylist")){
+
+                        Intent intent = new Intent(context, ReadStoryActivity.class);
+                        intent.putExtra("storyId",storyId);
+                        context.startActivity(intent);
+
+                    }else{
+
+                        Intent intent = new Intent(context, PlaylistActivity.class);
+                        intent.putExtra("playlistId",playlistId);
+                        context.startActivity(intent);
+                    }
+                }else {
 
                     Intent intent = new Intent(context, PlaylistActivity.class);
                     intent.putExtra("playlistId",playlistId);
@@ -119,7 +130,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                         int id = item.getItemId();
                         if (id==0){
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.AlertDialogTheme);
                             builder.setTitle("Delete");
                             builder.setMessage("are you sure..?");
                             builder.setPositiveButton("delete",
@@ -136,8 +147,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
                                         }
                                     });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            builder.create().show();
 
                         }
 
@@ -147,15 +157,12 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                             intent.putExtra("storyId",storyId);
                             context.startActivity(intent);
                         }
-
                         return false;
                     }
                 });
                 popupMenu.show();
-
             }
         });
-
     }
 
     private void deleteStory(final String storyId, String storyImage) {

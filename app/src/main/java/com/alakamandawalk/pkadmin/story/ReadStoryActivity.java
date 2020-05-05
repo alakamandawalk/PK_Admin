@@ -1,9 +1,9 @@
 package com.alakamandawalk.pkadmin.story;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import com.alakamandawalk.pkadmin.LoginActivity;
 import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,10 +52,7 @@ public class ReadStoryActivity extends AppCompatActivity {
     FirebaseUser user;
     String uid;
 
-    String storyName;
-    String story;
-    String storyImage;
-    String storyDate;
+    String storyName, story, storyImage, storyDate, storyCategoryId, storyPlaylistId, storySearchTag;
 
     ProgressDialog pd;
 
@@ -151,7 +149,7 @@ public class ReadStoryActivity extends AppCompatActivity {
 
             pd.setMessage("removing...");
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(ReadStoryActivity.this);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
             builder.setTitle("Are you sure?");
             builder.setMessage("you want to delete this story from downloads?");
             builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
@@ -189,7 +187,7 @@ public class ReadStoryActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             final byte[] data = baos.toByteArray();
 
-            localDb.insertStory(id,storyName,story,storyDate,data);
+            localDb.insertStory(id, storyName, story, storyDate, storyCategoryId, storyPlaylistId, storySearchTag, data);
 
             Toast.makeText(ReadStoryActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
             isOnDownloads(id);

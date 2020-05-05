@@ -29,6 +29,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 LocalDBEntry.KEY_NAME + " TEXT," +
                 LocalDBEntry.KEY_STORY + " TEXT," +
                 LocalDBEntry.KEY_DATE + " TEXT," +
+                LocalDBEntry.KEY_CATEGORY_ID + " TEXT," +
+                LocalDBEntry.KEY_PLAYLIST_ID + " TEXT," +
+                LocalDBEntry.KEY_SEARCH_TAG + " TEXT," +
                 LocalDBEntry.KEY_IMAGE + " BLOB);";
 
         db.execSQL(CREATE_TABLE_FAV_STORY);
@@ -43,13 +46,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertStory( String id, String name, String story, String date, byte[] image) {
+    public boolean insertStory( String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, byte[] image) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues cv = new  ContentValues();
         cv.put(LocalDBEntry.KEY_ID, id);
         cv.put(LocalDBEntry.KEY_NAME, name);
         cv.put(LocalDBEntry.KEY_STORY, story);
         cv.put(LocalDBEntry.KEY_DATE, date);
+        cv.put(LocalDBEntry.KEY_CATEGORY_ID, storyCategoryId);
+        cv.put(LocalDBEntry.KEY_PLAYLIST_ID, storyPlaylistId);
+        cv.put(LocalDBEntry.KEY_SEARCH_TAG, storySearchTag);
         cv.put(LocalDBEntry.KEY_IMAGE, image);
         database.insert(LocalDBEntry.TABLE_NAME, null, cv);
 
@@ -68,11 +74,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateStory (String id, String name, String story, String date, byte[] image) {
+    public boolean updateStory (String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, byte[] image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(LocalDBEntry.KEY_NAME, name);
         cv.put(LocalDBEntry.KEY_STORY, story);
+        cv.put(LocalDBEntry.KEY_CATEGORY_ID, storyCategoryId);
+        cv.put(LocalDBEntry.KEY_PLAYLIST_ID, storyPlaylistId);
+        cv.put(LocalDBEntry.KEY_SEARCH_TAG, storySearchTag);
         cv.put(LocalDBEntry.KEY_IMAGE, image);
         db.update(LocalDBEntry.TABLE_NAME, cv, ""+ LocalDBEntry.KEY_ID+" = ? ", new String[] { id } );
         return true;

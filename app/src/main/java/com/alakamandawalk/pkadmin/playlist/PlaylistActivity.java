@@ -25,6 +25,7 @@ import com.alakamandawalk.pkadmin.category.NewCategoryActivity;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -93,7 +94,7 @@ public class PlaylistActivity extends AppCompatActivity {
                         int id = item.getItemId();
                         if (id==0){
 
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(PlaylistActivity.this);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(PlaylistActivity.this, R.style.AlertDialogTheme);
                             builder.setTitle("Delete");
                             builder.setMessage("are you sure..?");
                             builder.setPositiveButton("delete",
@@ -110,8 +111,7 @@ public class PlaylistActivity extends AppCompatActivity {
                                             dialog.cancel();
                                         }
                                     });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
+                            builder.create().show();
 
                         }
 
