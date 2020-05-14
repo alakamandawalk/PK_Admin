@@ -30,7 +30,7 @@
                 android:textAlignment="textEnd"
                 android:padding="5dp"
                 android:layout_alignParentBottom="true"
-                android:textColor="#ffffff"
+                android:textColor="@color/primaryTextColor"
                 android:background="#992c2c2c"/>
 
         </RelativeLayout>
@@ -45,8 +45,9 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingBottom="10dp"
-            android:textColor="#ffffff"
-            android:textSize="22sp" />
+            android:textColor="@color/primaryTextColor"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/storyTv"
@@ -55,7 +56,8 @@
             android:padding="5dp"
             android:textSize="22sp"
             android:layout_marginTop="20dp"
-            android:lineSpacingExtra="15dp"/>
+            android:lineSpacingExtra="15dp"
+            android:textColor="@color/storyTextColor"/>
 
     </LinearLayout>
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".story.ReadStoryActivity"
-    android:background="#aaaaaa">
+    android:background="@color/storyBgColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

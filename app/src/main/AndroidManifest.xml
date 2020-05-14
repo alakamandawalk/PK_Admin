@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".category.CategoryActivity"></activity>
+        <activity android:name=".NewMsgActivity"></activity>
+        <activity android:name=".category.CategoryActivity" />
         <activity android:name=".playlist.PlaylistActivity" />
         <activity android:name=".playlist.NewPlaylistActivity" />
         <activity android:name=".category.NewCategoryActivity" />

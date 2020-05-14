@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewActivity"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/primaryDarkColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="new category"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/secondaryColor"
             app:cornerRadius="10dp"
             android:layout_margin="10dp"/>
 
@@ -31,7 +31,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="new playlist"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/secondaryColor"
             app:cornerRadius="10dp"
             android:layout_margin="10dp"/>
 
@@ -42,7 +42,18 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="new story"
             android:textSize="20sp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/secondaryColor"
+            app:cornerRadius="10dp"
+            android:layout_margin="10dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newMsgBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="new message"
+            android:textSize="20sp"
+            android:textColor="@color/secondaryColor"
             app:cornerRadius="10dp"
             android:layout_margin="10dp"/>
 

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewMsgActivity"
+    android:background="@color/storyBgColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:queryHint="Search"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:iconifiedByDefault="false"
+                android:layout_marginBottom="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/selectStoryRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/secondaryLightColor"
+                android:layout_alignParentBottom="true"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/msgRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="7dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/msg_bg">
+
+        <ImageButton
+            android:id="@+id/attachmentIb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_attachment_holo_dark"
+            android:background="@drawable/round_background_white"
+            android:tint="@color/primaryDarkColor"
+            android:padding="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="bottom"/>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/attachStoryLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/primaryLightColor"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:id="@+id/storyTitleTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/primaryTextColor"
+                        android:padding="5dp"/>
+
+                    <ImageButton
+                        android:id="@+id/removeStoryIb"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_clear_holo_dark"
+                        android:tint="@color/primaryTextColor"
+                        android:layout_alignParentRight="true"
+                        android:background="@null"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"/>
+
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/msgEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:textSize="16sp"
+                    android:inputType="textMultiLine"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <ImageButton
+            android:id="@+id/sendMsgIb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_holo_dark"
+            android:tint="@color/secondaryColor"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/round_background_white"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="bottom"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

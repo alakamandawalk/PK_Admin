@@ -26,8 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-                android:textColor="@color/colorAccent"
-                app:iconTint="@color/colorAccent"
+                android:textColor="@color/secondaryColor"
+                app:iconTint="@color/secondaryColor"
                 app:icon="@drawable/ic_all_categories_holo_dark"
                 app:iconGravity="textEnd"
                 android:layout_margin="10dp"/>
@@ -41,7 +41,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorAccent"
+                android:background="@color/secondaryColor"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 

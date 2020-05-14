@@ -90,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/primaryTextColor"
                     android:layout_marginTop="20dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/secondaryColor"
                     android:textSize="20sp"
                     android:layout_alignParentBottom="true"
                     app:cornerRadius="5dp"/>

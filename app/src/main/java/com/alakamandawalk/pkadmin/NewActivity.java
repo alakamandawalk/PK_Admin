@@ -13,7 +13,7 @@ import com.alakamandawalk.pkadmin.story.AddOrEditStoryActivity;
 
 public class NewActivity extends AppCompatActivity {
 
-    Button newCategoryBtn, newPlaylistBtn, newStoryBtn;
+    Button newCategoryBtn, newPlaylistBtn, newStoryBtn, newMsgBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,7 @@ public class NewActivity extends AppCompatActivity {
         newCategoryBtn = findViewById(R.id.newCategoryBtn);
         newPlaylistBtn = findViewById(R.id.newPlaylistBtn);
         newStoryBtn = findViewById(R.id.newStoryBtn);
+        newMsgBtn = findViewById(R.id.newMsgBtn);
 
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +50,13 @@ public class NewActivity extends AppCompatActivity {
                 Intent intent = new Intent(NewActivity.this, AddOrEditStoryActivity.class);
                 intent.putExtra("key", "add");
                 startActivity(intent);
+            }
+        });
+
+        newMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(NewActivity.this, NewMsgActivity.class));
             }
         });
     }

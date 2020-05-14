@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardActivity"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/primaryDarkColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -83,7 +83,7 @@
         android:layout_height="40dp"
         app:menu="@menu/menu_nav"
         app:labelVisibilityMode="unlabeled"
-        app:itemBackground="@color/colorPrimaryDark"
+        app:itemBackground="@color/primaryColor"
         app:itemIconTint="@drawable/bottom_nav_colors"
         android:layout_gravity="bottom"/>
 

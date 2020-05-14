@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".playlist.PlaylistActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/primaryDarkColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/colorPrimary"
+            app:contentScrim="@color/primaryColor"
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:titleEnabled="false">
 
@@ -58,7 +58,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:layout_gravity="center"
-                            android:textColor="#ffffff"
+                            android:textColor="@color/primaryTextColor"
                             android:layout_marginLeft="10dp"/>
 
                     </LinearLayout>
