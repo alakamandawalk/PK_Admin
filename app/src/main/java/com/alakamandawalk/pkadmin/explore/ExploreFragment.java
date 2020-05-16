@@ -1,40 +1,26 @@
 package com.alakamandawalk.pkadmin.explore;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.alakamandawalk.pkadmin.NewMsgActivity;
+import com.alakamandawalk.pkadmin.AuthorActivity;
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.message.MessageAdapter;
-import com.alakamandawalk.pkadmin.model.MessageData;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ExploreFragment extends Fragment {
 
-    RecyclerView authorMsgRv;
-
-    List<MessageData> msgList;
-    MessageAdapter messageAdapter;
+    ImageButton authorsIb, requestStoryIb, rateUsIb, likeUsFBIb, otherAppsIb, aboutUsIb;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -47,41 +33,55 @@ public class ExploreFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        authorMsgRv = view.findViewById(R.id.authorMsgRv);
+        authorsIb = view.findViewById(R.id.authorsIb);
+        requestStoryIb = view.findViewById(R.id.requestStoryIb);
+        rateUsIb = view.findViewById(R.id.rateUsIb);
+        likeUsFBIb = view.findViewById(R.id.likeUsFBIb);
+        otherAppsIb = view.findViewById(R.id.otherAppsIb);
+        aboutUsIb = view.findViewById(R.id.aboutUsIb);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setStackFromEnd(true);
-        authorMsgRv.setLayoutManager(layoutManager);
-        authorMsgRv.setHasFixedSize(true);
+        likeUsFBIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent faceBookIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/meedumpaaru"));
+                startActivity(faceBookIntent);
+            }
+        });
 
-        msgList = new ArrayList<>();
+        requestStoryIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmailReq();
+            }
+        });
 
-        loadMessages();
+        authorsIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AuthorActivity.class));
+            }
+        });
 
         return view;
     }
 
-    private void loadMessages() {
+    private void sendEmailReq() {
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("message");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                msgList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    MessageData messageData = ds.getValue(MessageData.class);
+        String[] TO = {"kasundularavau@gmail.com"};
 
-                    msgList.add(messageData);
-                    messageAdapter = new MessageAdapter(msgList, getActivity());
-                    authorMsgRv.setAdapter(messageAdapter);
-                }
-            }
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send email..."));
+        }catch (android.content.ActivityNotFoundException e){
+            Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

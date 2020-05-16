@@ -47,7 +47,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/msgRv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"/>
 
     </LinearLayout>
 
@@ -58,7 +59,7 @@
         android:layout_margin="7dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@drawable/msg_bg">
+        android:background="@drawable/msg_et_bg">
 
         <ImageButton
             android:id="@+id/attachmentIb"

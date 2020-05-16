@@ -79,10 +79,9 @@ public class NewMsgActivity extends AppCompatActivity {
         selectStoryRv.setLayoutManager(SelectStoryRvLM);
 
         LinearLayoutManager msgRvLM = new LinearLayoutManager(this);
-        msgRvLM.setStackFromEnd(false);
+        msgRvLM.setStackFromEnd(true);
         msgRv.setLayoutManager(msgRvLM);
         msgRv.setHasFixedSize(true);
-
         loadMessages();
 
         attachmentIb.setOnClickListener(new View.OnClickListener() {

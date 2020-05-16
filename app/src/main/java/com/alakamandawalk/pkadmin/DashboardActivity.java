@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import com.alakamandawalk.pkadmin.category.CategoryActivity;
 import com.alakamandawalk.pkadmin.download.DownloadFragment;
 import com.alakamandawalk.pkadmin.explore.ExploreFragment;
+import com.alakamandawalk.pkadmin.message.MessagesFragment;
 import com.alakamandawalk.pkadmin.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -123,14 +123,6 @@ public class DashboardActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
 
             switch (item.getItemId()){
-                case R.id.nav_explore:
-
-                    titleTv.setText("Explore");
-                    ExploreFragment exploreFragment = new ExploreFragment();
-                    FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
-                    ft3.replace(R.id.frameLayout, exploreFragment, "");
-                    ft3.commit();
-                    return true;
 
                 case R.id.nav_home:
 
@@ -171,13 +163,31 @@ public class DashboardActivity extends AppCompatActivity {
 
                     return true;
 
-                case R.id.nav_fav:
+                case R.id.nav_downloads:
 
                     titleTv.setText("Downloads");
                     DownloadFragment downloadFragment = new DownloadFragment();
                     FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                     ft2.replace(R.id.frameLayout, downloadFragment, "");
                     ft2.commit();
+                    return true;
+
+                case R.id.nav_messages:
+
+                    titleTv.setText("Messages");
+                    MessagesFragment messagesFragment = new MessagesFragment();
+                    FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+                    ft3.replace(R.id.frameLayout, messagesFragment, "");
+                    ft3.commit();
+                    return true;
+
+                case R.id.nav_explore:
+
+                    titleTv.setText("Explore");
+                    ExploreFragment exploreFragment = new ExploreFragment();
+                    FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+                    ft4.replace(R.id.frameLayout, exploreFragment, "");
+                    ft4.commit();
                     return true;
             }
 
