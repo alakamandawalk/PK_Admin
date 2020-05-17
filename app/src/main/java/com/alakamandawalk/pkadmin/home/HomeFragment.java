@@ -28,6 +28,12 @@ import com.alakamandawalk.pkadmin.category.SimpleCategoryAdapter;
 import com.alakamandawalk.pkadmin.model.CategoryData;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.alakamandawalk.pkadmin.story.StoryAdapter;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +60,8 @@ public class HomeFragment extends Fragment {
     ProgressDialog pd;
     private boolean showHide = false;
 
+    private AdView mAdView;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -71,6 +79,19 @@ public class HomeFragment extends Fragment {
         simpleCategoryRv = view.findViewById(R.id.simpleCategoryRv);
         pd = new ProgressDialog(getActivity());
         seeAllCategoriesBtn.setText("show all categories");
+
+        AdView adView = new AdView(getActivity());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+
+        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         LinearLayoutManager categoryLayoutManager =
                 new LinearLayoutManager(getActivity(),

@@ -12,6 +12,12 @@ import android.view.ViewGroup;
 
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.alakamandawalk.pkadmin.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 
 /**
@@ -24,6 +30,8 @@ public class DownloadFragment extends Fragment {
     RecyclerView favStoryRv;
     DownloadedStoryAdapter downloadedStoryAdapter;
 
+    private AdView mAdView;
+
     public DownloadFragment() {
         // Required empty public constructor
     }
@@ -35,10 +43,22 @@ public class DownloadFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_download, container, false);
 
+        favStoryRv = view.findViewById(R.id.favStoryRv);
+
+        AdView adView = new AdView(getActivity());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+
+        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         dbHelper = new DBHelper(getActivity());
-
-        favStoryRv = view.findViewById(R.id.favStoryRv);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setStackFromEnd(true);

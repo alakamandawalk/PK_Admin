@@ -91,28 +91,9 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             @Override
             public void onClick(View v) {
 
-                if (playlistId.length()>9){
-
-                    String checkedPlaylist = playlistId.substring(0,10);
-
-                    if (checkedPlaylist.equals("noplaylist")){
-
-                        Intent intent = new Intent(context, ReadStoryActivity.class);
-                        intent.putExtra("storyId",storyId);
-                        context.startActivity(intent);
-
-                    }else{
-
-                        Intent intent = new Intent(context, PlaylistActivity.class);
-                        intent.putExtra("playlistId",playlistId);
-                        context.startActivity(intent);
-                    }
-                }else {
-
-                    Intent intent = new Intent(context, PlaylistActivity.class);
-                    intent.putExtra("playlistId",playlistId);
-                    context.startActivity(intent);
-                }
+                Intent intent = new Intent(context, ReadStoryActivity.class);
+                intent.putExtra("storyId",storyId);
+                context.startActivity(intent);
             }
         });
 

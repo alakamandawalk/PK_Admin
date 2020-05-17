@@ -22,7 +22,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
         AdView adView = new AdView(this);
         adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-7611458447394787/1726043548");
+        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override

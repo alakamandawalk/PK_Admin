@@ -14,6 +14,12 @@ import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.AuthorActivity;
 import com.alakamandawalk.pkadmin.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +27,8 @@ import com.alakamandawalk.pkadmin.R;
 public class ExploreFragment extends Fragment {
 
     ImageButton authorsIb, requestStoryIb, rateUsIb, likeUsFBIb, otherAppsIb, aboutUsIb;
+
+    private AdView mAdView;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -39,6 +47,19 @@ public class ExploreFragment extends Fragment {
         likeUsFBIb = view.findViewById(R.id.likeUsFBIb);
         otherAppsIb = view.findViewById(R.id.otherAppsIb);
         aboutUsIb = view.findViewById(R.id.aboutUsIb);
+
+        AdView adView = new AdView(getActivity());
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+
+        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         likeUsFBIb.setOnClickListener(new View.OnClickListener() {
             @Override

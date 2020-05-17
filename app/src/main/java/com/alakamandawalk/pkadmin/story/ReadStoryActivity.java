@@ -23,6 +23,13 @@ import com.alakamandawalk.pkadmin.LoginActivity;
 import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
+import com.alakamandawalk.pkadmin.playlist.PlaylistActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,10 +47,9 @@ import java.util.Locale;
 
 public class ReadStoryActivity extends AppCompatActivity {
 
-    ImageButton backIb;
-    TextView titleTv, storyTv, dateTv;
+    ImageButton backIb, authorIb, downloadIb, playListIb, relatedStoriesIb;
+    TextView titleTv, storyTv, dateTv, authorNameTv;
     ImageView storyImg;
-    ImageButton favIb;
 
     private boolean isFav = false;
 
@@ -54,7 +60,11 @@ public class ReadStoryActivity extends AppCompatActivity {
 
     String storyName, story, storyImage, storyDate, storyCategoryId, storyPlaylistId, storySearchTag;
 
+    String storyPlaylistIdToPut;
+
     ProgressDialog pd;
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +79,27 @@ public class ReadStoryActivity extends AppCompatActivity {
         pd = new ProgressDialog(this);
 
         backIb = findViewById(R.id.backIb);
-        favIb = findViewById(R.id.favIb);
+        authorIb = findViewById(R.id.authorIb);
+        playListIb = findViewById(R.id.playListIb);
+        relatedStoriesIb = findViewById(R.id.relatedStoriesIb);
+        downloadIb = findViewById(R.id.downloadIb);
         titleTv = findViewById(R.id.titleTv);
         storyTv = findViewById(R.id.storyTv);
         storyImg = findViewById(R.id.storyImg);
         dateTv = findViewById(R.id.dateTv);
+
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         checkUserStatus();
 
@@ -86,16 +112,43 @@ public class ReadStoryActivity extends AppCompatActivity {
             }
         });
 
-        favIb.setOnClickListener(new View.OnClickListener() {
+        downloadIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downloadOrRemove(storyId);
             }
         });
 
+        playListIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (storyPlaylistIdToPut.length()>9){
+
+                    String checkedPlaylist = storyPlaylistIdToPut.substring(0,10);
+
+                    if (checkedPlaylist.equals("noplaylist")){
+
+                        Toast.makeText(ReadStoryActivity.this, "no playlist!", Toast.LENGTH_SHORT).show();
+                    }else{
+
+                        Intent intent = new Intent(ReadStoryActivity.this, PlaylistActivity.class);
+                        intent.putExtra("playlistId",storyPlaylistIdToPut);
+                        startActivity(intent);
+                    }
+                }else {
+
+                    Intent intent = new Intent(ReadStoryActivity.this, PlaylistActivity.class);
+                    intent.putExtra("playlistId",storyPlaylistIdToPut);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
-    private void loadStoryOffline(String id) {
+    private void
+    loadStoryOffline(String id) {
 
         Cursor cursor = localDb.getStory(id);
         cursor.moveToFirst();
@@ -103,6 +156,7 @@ public class ReadStoryActivity extends AppCompatActivity {
         String storyName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_NAME));
         String story = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_STORY));
         String storyDate = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_DATE));
+        storyPlaylistIdToPut = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_PLAYLIST_ID));
         byte[] storyImage = cursor.getBlob(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_IMAGE));
 
         if (!cursor.isClosed()){
@@ -132,12 +186,12 @@ public class ReadStoryActivity extends AppCompatActivity {
         if (cursor.getCount()>0){
 
             isFav = true;
-            favIb.setImageResource(R.drawable.ic_delete_holo_dark);
+            downloadIb.setImageResource(R.drawable.ic_delete_holo_dark);
             loadStoryOffline(id);
 
         }else {
             isFav=false;
-            favIb.setImageResource(R.drawable.ic_download_holo_dark);
+            downloadIb.setImageResource(R.drawable.ic_download_holo_dark);
             loadStoryOnline(id);
         }
 
@@ -194,7 +248,6 @@ public class ReadStoryActivity extends AppCompatActivity {
             pd.dismiss();
 
         }
-
     }
 
     private void loadStoryOnline(String id) {
@@ -214,6 +267,10 @@ public class ReadStoryActivity extends AppCompatActivity {
                     storyName = ds.child("storyName").getValue().toString();
                     story = ds.child("story").getValue().toString();
                     storyImage = ds.child("storyImage").getValue().toString();
+                    storyPlaylistIdToPut = ds.child("storyPlaylistId").getValue().toString();
+                    storyCategoryId = ds.child("storyCategoryId").getValue().toString();
+                    storyPlaylistId = ds.child("storyPlaylistId").getValue().toString();
+                    storySearchTag = ds.child("storySearchTag").getValue().toString();
                     String timeStamp  = ds.child("storyDate").getValue().toString();
 
                     java.util.Calendar calendar = Calendar.getInstance(Locale.getDefault());
