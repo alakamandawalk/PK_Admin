@@ -7,13 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.alakamandawalk.pkadmin.author.NewAuthorActivity;
 import com.alakamandawalk.pkadmin.category.NewCategoryActivity;
+import com.alakamandawalk.pkadmin.message.NewMsgActivity;
 import com.alakamandawalk.pkadmin.playlist.NewPlaylistActivity;
 import com.alakamandawalk.pkadmin.story.AddOrEditStoryActivity;
 
 public class NewActivity extends AppCompatActivity {
 
-    Button newCategoryBtn, newPlaylistBtn, newStoryBtn, newMsgBtn;
+    Button newCategoryBtn, newPlaylistBtn, newStoryBtn, newMsgBtn, newAuthorBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class NewActivity extends AppCompatActivity {
         newPlaylistBtn = findViewById(R.id.newPlaylistBtn);
         newStoryBtn = findViewById(R.id.newStoryBtn);
         newMsgBtn = findViewById(R.id.newMsgBtn);
+        newAuthorBtn = findViewById(R.id.newAuthorBtn);
 
         newCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,5 +62,13 @@ public class NewActivity extends AppCompatActivity {
                 startActivity(new Intent(NewActivity.this, NewMsgActivity.class));
             }
         });
+
+        newAuthorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(NewActivity.this, NewAuthorActivity.class));
+            }
+        });
+
     }
 }

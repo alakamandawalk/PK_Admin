@@ -48,7 +48,7 @@ import java.util.Locale;
 public class ReadStoryActivity extends AppCompatActivity {
 
     ImageButton backIb, authorIb, downloadIb, playListIb, relatedStoriesIb;
-    TextView titleTv, storyTv, dateTv, authorNameTv;
+    TextView titleTv, storyTv, dateTv, authorNameTv, downloadBtnTipTv;
     ImageView storyImg;
 
     private boolean isFav = false;
@@ -87,6 +87,7 @@ public class ReadStoryActivity extends AppCompatActivity {
         storyTv = findViewById(R.id.storyTv);
         storyImg = findViewById(R.id.storyImg);
         dateTv = findViewById(R.id.dateTv);
+        downloadBtnTipTv = findViewById(R.id.downloadBtnTipTv);
 
         AdView adView = new AdView(this);
         adView.setAdSize(AdSize.BANNER);
@@ -187,11 +188,13 @@ public class ReadStoryActivity extends AppCompatActivity {
 
             isFav = true;
             downloadIb.setImageResource(R.drawable.ic_delete_holo_dark);
+            downloadBtnTipTv.setText("remove");
             loadStoryOffline(id);
 
         }else {
             isFav=false;
             downloadIb.setImageResource(R.drawable.ic_download_holo_dark);
+            downloadBtnTipTv.setText("download");
             loadStoryOnline(id);
         }
 

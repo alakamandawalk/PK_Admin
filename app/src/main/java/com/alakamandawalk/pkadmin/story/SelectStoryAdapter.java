@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alakamandawalk.pkadmin.NewMsgActivity;
+import com.alakamandawalk.pkadmin.message.NewMsgActivity;
 import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.model.StoryData;
 

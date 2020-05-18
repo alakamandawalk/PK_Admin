@@ -8,17 +8,23 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListPopupWindow;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.R;
@@ -41,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -51,7 +58,7 @@ public class HomeFragment extends Fragment {
 
 
     RecyclerView storyRv, categoryRv, simpleCategoryRv;
-    Button seeAllCategoriesBtn;
+    TextView storyCountTv, sortStoriesTv, seeAllCategoriesTv;
     StoryAdapter storyAdapter;
     List<StoryData> storyList;
     CategoryAdapter categoryAdapter;
@@ -71,14 +78,16 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         storyRv = view.findViewById(R.id.storyRv);
         categoryRv = view.findViewById(R.id.categoryRv);
-        seeAllCategoriesBtn = view.findViewById(R.id.seeAllCategoriesBtn);
+        seeAllCategoriesTv = view.findViewById(R.id.seeAllCategoriesTv);
+        sortStoriesTv = view.findViewById(R.id.sortStoriesTv);
+        storyCountTv = view.findViewById(R.id.storyCountTv);
         simpleCategoryRv = view.findViewById(R.id.simpleCategoryRv);
         pd = new ProgressDialog(getActivity());
-        seeAllCategoriesBtn.setText("show all categories");
+        seeAllCategoriesTv.setText("SHOW ALL");
 
         AdView adView = new AdView(getActivity());
         adView.setAdSize(AdSize.BANNER);
@@ -118,48 +127,108 @@ public class HomeFragment extends Fragment {
 
         checkNetworkStatus();
 
-        seeAllCategoriesBtn.setOnClickListener(new View.OnClickListener() {
+        seeAllCategoriesTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (showHide){
                     showHide = false;
                     simpleCategoryRv.setVisibility(View.GONE);
-                    seeAllCategoriesBtn.setText("show all categories");
+                    categoryRv.setVisibility(View.VISIBLE);
+                    seeAllCategoriesTv.setText("SHOW ALL");
 
                 }else {
                     showHide = true;
                     simpleCategoryRv.setVisibility(View.VISIBLE);
-                    seeAllCategoriesBtn.setText("show less");
+                    categoryRv.setVisibility(View.GONE);
+                    seeAllCategoriesTv.setText("SHOW LESS");
                 }
+            }
+        });
+
+        sortStoriesTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerForContextMenu(sortStoriesTv);
+                getActivity().openContextMenu(v);
             }
         });
 
         return view;
     }
 
-    private void loadStories() {
+    private void loadStories(final String sort) {
 
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                storyList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    StoryData storyData = ds.getValue(StoryData.class);
+        if (sort.equals("shuffle")){
 
-                    storyList.add(storyData);
-                    storyAdapter = new StoryAdapter(getActivity(), storyList);
-                    storyRv.setAdapter(storyAdapter);
-
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
+            dbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    storyList.clear();
+                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                        StoryData storyData = ds.getValue(StoryData.class);
+                        storyList.add(storyData);
+                        Collections.shuffle(storyList);
+                        storyAdapter = new StoryAdapter(getActivity(), storyList);
+                        storyRv.setAdapter(storyAdapter);
+                    }
+                    storyCountTv.setText(storyList.size()+" STORIES");
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(), ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getActivity(), ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (sort.equals("byDateAsc")){
+
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
+            dbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    storyList.clear();
+                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                        StoryData storyData = ds.getValue(StoryData.class);
+                        storyList.add(storyData);
+                        storyAdapter = new StoryAdapter(getActivity(), storyList);
+                        storyRv.setAdapter(storyAdapter);
+                    }
+                    storyCountTv.setText(storyList.size()+" STORIES");
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getActivity(), ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        if (sort.equals("byDateDsc")){
+
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
+            dbRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    storyList.clear();
+                    for (DataSnapshot ds: dataSnapshot.getChildren()){
+                        StoryData storyData = ds.getValue(StoryData.class);
+                        storyList.add(storyData);
+                        Collections.reverse(storyList);
+                        storyAdapter = new StoryAdapter(getActivity(), storyList);
+                        storyRv.setAdapter(storyAdapter);
+                    }
+                    storyCountTv.setText(storyList.size()+" STORIES");
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getActivity(), ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void loadCategories() {
@@ -177,6 +246,7 @@ public class HomeFragment extends Fragment {
                     CategoryData categoryData = ds.getValue(CategoryData.class);
 
                     categoryList.add(categoryData);
+                    Collections.shuffle(categoryList);
                     categoryAdapter = new CategoryAdapter(getActivity(), categoryList);
                     simpleCategoryAdapter = new SimpleCategoryAdapter(getActivity(), categoryList);
                     categoryRv.setAdapter(categoryAdapter);
@@ -201,7 +271,7 @@ public class HomeFragment extends Fragment {
         if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
             loadCategories();
-            loadStories();
+            loadStories("shuffle");
         }
         else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
@@ -211,11 +281,42 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_sort_stories,menu);
+        menu.setHeaderTitle("Sort By");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.sort_shuffle:
+                loadStories("shuffle");
+                break;
+
+            case R.id.sort_by_date_asc:
+                loadStories("byDateAsc");
+                break;
+
+            case R.id.sort_by_date_dsc:
+                loadStories("byDateDsc");
+                break;
+
+        }
+
+        return true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
         showHide = false;
         simpleCategoryRv.setVisibility(View.GONE);
-        seeAllCategoriesBtn.setText("show all categories");
+        categoryRv.setVisibility(View.VISIBLE);
+        seeAllCategoriesTv.setText("SHOW ALL");
     }
 }

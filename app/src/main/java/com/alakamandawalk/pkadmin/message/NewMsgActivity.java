@@ -1,11 +1,10 @@
-package com.alakamandawalk.pkadmin;
+package com.alakamandawalk.pkadmin.message;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,12 +16,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alakamandawalk.pkadmin.category.CategoryActivity;
-import com.alakamandawalk.pkadmin.message.MessageAdapter;
+import com.alakamandawalk.pkadmin.R;
 import com.alakamandawalk.pkadmin.model.MessageData;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.alakamandawalk.pkadmin.story.SelectStoryAdapter;
-import com.alakamandawalk.pkadmin.story.StoryAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

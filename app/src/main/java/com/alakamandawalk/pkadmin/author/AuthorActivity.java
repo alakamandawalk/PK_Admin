@@ -1,9 +1,10 @@
- package com.alakamandawalk.pkadmin;
+ package com.alakamandawalk.pkadmin.author;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;

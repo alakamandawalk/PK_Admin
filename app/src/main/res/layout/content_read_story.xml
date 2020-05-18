@@ -79,14 +79,13 @@
                         android:padding="10dp"
                         android:src="@drawable/ic_person_holo_dark"
                         android:background="@null"
-                        android:tint="@color/secondaryLightColor"
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="author"
-                        android:textColor="@color/secondaryColor"
+                        android:textColor="@color/primaryTextColor"
                         android:layout_gravity="center_horizontal"/>
 
                 </LinearLayout>
@@ -107,6 +106,7 @@
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView
+                        android:id="@+id/downloadBtnTipTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="download"
@@ -181,6 +181,10 @@
                 android:layout_marginTop="20dp"
                 android:lineSpacingExtra="15dp"
                 android:textColor="@color/storyTextColor"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
 
         </LinearLayout>
 

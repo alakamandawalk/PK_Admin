@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.alakamandawalk.pkadmin.AuthorActivity;
+import com.alakamandawalk.pkadmin.author.AuthorActivity;
 import com.alakamandawalk.pkadmin.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;

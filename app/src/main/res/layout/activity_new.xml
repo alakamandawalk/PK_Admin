@@ -57,6 +57,17 @@
             app:cornerRadius="10dp"
             android:layout_margin="10dp"/>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/newAuthorBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="new author"
+            android:textSize="20sp"
+            android:textColor="@color/secondaryColor"
+            app:cornerRadius="10dp"
+            android:layout_margin="10dp"/>
+
     </LinearLayout>
 
 </RelativeLayout>
