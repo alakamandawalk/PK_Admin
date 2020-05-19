@@ -32,6 +32,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 LocalDBEntry.KEY_CATEGORY_ID + " TEXT," +
                 LocalDBEntry.KEY_PLAYLIST_ID + " TEXT," +
                 LocalDBEntry.KEY_SEARCH_TAG + " TEXT," +
+                LocalDBEntry.KEY_AUTHOR_ID + " TEXT," +
+                LocalDBEntry.KEY_AUTHOR_NAME + " TEXT," +
                 LocalDBEntry.KEY_IMAGE + " BLOB);";
 
         db.execSQL(CREATE_TABLE_FAV_STORY);
@@ -46,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertStory( String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, byte[] image) {
+    public boolean insertStory( String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, String authorId, String authorName, byte[] image) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues cv = new  ContentValues();
         cv.put(LocalDBEntry.KEY_ID, id);
@@ -56,6 +58,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(LocalDBEntry.KEY_CATEGORY_ID, storyCategoryId);
         cv.put(LocalDBEntry.KEY_PLAYLIST_ID, storyPlaylistId);
         cv.put(LocalDBEntry.KEY_SEARCH_TAG, storySearchTag);
+        cv.put(LocalDBEntry.KEY_AUTHOR_ID, authorId);
+        cv.put(LocalDBEntry.KEY_AUTHOR_NAME, authorName);
         cv.put(LocalDBEntry.KEY_IMAGE, image);
         database.insert(LocalDBEntry.TABLE_NAME, null, cv);
 
@@ -74,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public boolean updateStory (String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, byte[] image) {
+    public boolean updateStory (String id, String name, String story, String date, String storyCategoryId, String storyPlaylistId, String storySearchTag, String authorId, String authorName, byte[] image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(LocalDBEntry.KEY_NAME, name);
@@ -82,6 +86,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(LocalDBEntry.KEY_CATEGORY_ID, storyCategoryId);
         cv.put(LocalDBEntry.KEY_PLAYLIST_ID, storyPlaylistId);
         cv.put(LocalDBEntry.KEY_SEARCH_TAG, storySearchTag);
+        cv.put(LocalDBEntry.KEY_AUTHOR_ID, authorId);
+        cv.put(LocalDBEntry.KEY_AUTHOR_NAME, authorName);
         cv.put(LocalDBEntry.KEY_IMAGE, image);
         db.update(LocalDBEntry.TABLE_NAME, cv, ""+ LocalDBEntry.KEY_ID+" = ? ", new String[] { id } );
         return true;

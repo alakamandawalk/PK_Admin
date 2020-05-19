@@ -74,10 +74,11 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
     Button publishStoryBtn;
     ProgressDialog pd;
     ImageButton backIb;
-    Spinner categorySpinner, playlistSpinner;
+    Spinner categorySpinner, playlistSpinner, authorSpinner;
 
     ArrayList<String> categoryList;
     ArrayList<String> playlist;
+    ArrayList<String> authorList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
         backIb = findViewById(R.id.backIb);
         categorySpinner = findViewById(R.id.categorySpinner);
         playlistSpinner = findViewById(R.id.playlistSpinner);
+        authorSpinner = findViewById(R.id.authorSpinner);
 
         pd = new ProgressDialog(this);
 
@@ -121,8 +123,10 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
         categoryList = new ArrayList<>();
         playlist = new ArrayList<>();
+        authorList = new ArrayList<>();
 
         loadCategories();
+        loadAuthors();
 
         if (addOrEditKey.equals("edit")){
 
@@ -160,38 +164,54 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                 String searchTag = searchTagEt.getText().toString().trim();
                 String story = newStoryEt.getText().toString().trim();
                 String categoryId = categorySpinner.getSelectedItem().toString();
+                String playlistId = playlistSpinner.getSelectedItem().toString();
+                String authorId = authorSpinner.getSelectedItem().toString();
 
-                if(TextUtils.isEmpty(storyName)){
-                    Toast.makeText(AddOrEditStoryActivity.this, "story name is empty!", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(storyName) ||
+                        TextUtils.isEmpty(searchTag) ||
+                        TextUtils.isEmpty(story) ||
+                        playlistSpinner.getSelectedItem() == null ||
+                        categorySpinner.getSelectedItem() == null ||
+                        authorSpinner.getSelectedItem() == null){
+                    Toast.makeText(AddOrEditStoryActivity.this, "check again before publish!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(TextUtils.isEmpty(searchTag)){
-                    Toast.makeText(AddOrEditStoryActivity.this, "search tag is empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(TextUtils.isEmpty(story)){
-                    Toast.makeText(AddOrEditStoryActivity.this, "story is empty!", Toast.LENGTH_SHORT).show();
-                    return;
+
+                if (addOrEditKey.equals("edit")){
+                    updateStory(storyName, story, categoryId, playlistId, storyId, searchTag, authorId);
+                }else{
+                    uploadData(storyName, story, categoryId, playlistId, searchTag, authorId);
                 }
 
-                if (!(playlistSpinner.getSelectedItem() == null)){
-                    String playlistId = playlistSpinner.getSelectedItem().toString();
-
-                    if (addOrEditKey.equals("edit")){
-
-                        updateStory(storyName, story, categoryId, playlistId, storyId, searchTag);
-                    }else{
-
-                        uploadData(storyName, story, categoryId, playlistId, searchTag);
-                    }
-                }else {
-                    Toast.makeText(AddOrEditStoryActivity.this, "haven't selected a playlist!", Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
 
-     private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId, final String searchTag) {
+    private void loadAuthors() {
+
+        DatabaseReference authorRef = FirebaseDatabase.getInstance().getReference("author");
+        authorRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+
+                    String authorId = ds.child("authorId").getValue().toString();
+                    authorList.add(authorId);
+                    ArrayAdapter<String> authorAdapter = new ArrayAdapter<>(AddOrEditStoryActivity.this, R.layout.spinner_item, authorList);
+                    authorSpinner.setAdapter(authorAdapter);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(AddOrEditStoryActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateStory(final String storyName, final String story, final String categoryId, final String playlistId, final String storyId, final String searchTag, final String authorId) {
 
         pd.setMessage("Updating...");
         pd.show();
@@ -232,6 +252,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                                             hashMap.put("storyCategoryId", categoryId);
                                             hashMap.put("storyPlaylistId", playlistId);
                                             hashMap.put("storySearchTag", searchTag);
+                                            hashMap.put("authorId", authorId);
 
                                             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
                                             dbRef.child(storyId)
@@ -370,7 +391,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
     }
 
-    private void uploadData(final String storyName, final String story, final String categoryId, final String playlistId, final String searchTag) {
+    private void uploadData(final String storyName, final String story, final String categoryId, final String playlistId, final String searchTag, final String authorId) {
 
         pd.setMessage("uploading new story...");
         pd.show();
@@ -405,6 +426,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
                             hashMap.put("storyCategoryId", categoryId);
                             hashMap.put("storyPlaylistId", playlistId);
                             hashMap.put("storySearchTag", searchTag);
+                            hashMap.put("authorId", authorId);
 
                             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("story");
                             dbRef.child(timeStamp).setValue(hashMap)
@@ -580,7 +602,7 @@ public class AddOrEditStoryActivity extends AppCompatActivity {
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
         builder.setTitle("Are you sure?");
-        builder.setMessage("cancel editing and leave...");
+        builder.setMessage("cancel working and leave...");
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

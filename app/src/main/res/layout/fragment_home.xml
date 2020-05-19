@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+            ads:adUnitId="ca-app-pub-7611458447394787/2180536786"
             android:layout_gravity="center_horizontal" />
 
         <include layout="@layout/content_home"/>

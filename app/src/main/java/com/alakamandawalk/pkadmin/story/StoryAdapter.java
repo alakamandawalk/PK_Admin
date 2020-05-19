@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -67,7 +68,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         final String storyImage = storyDataList.get(position).getStoryImage();
         String storyName = storyDataList.get(position).getStoryName();
         String timeStamp = storyDataList.get(position).getStoryDate();
-        final String playlistId = storyDataList.get(position).getStoryPlaylistId();
+        String authorId = storyDataList.get(position).getAuthorId();
 
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
@@ -86,6 +87,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
         holder.storyNameTv.setText(storyName);
         holder.storyDateTv.setText(storyDate);
+        setAuthorName(authorId, holder);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +147,28 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         });
     }
 
+    private void setAuthorName(String authorId, final StoryViewHolder holder) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("author");
+        Query query = reference.orderByChild("authorId").equalTo(authorId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+
+                    holder.authorNameTv.setText(ds.child("authorName").getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void deleteStory(final String storyId, String storyImage) {
 
         final ProgressDialog pd = new ProgressDialog(context);
@@ -197,7 +221,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
         public CardView storyCv;
         public ImageView storyImageIv;
-        public TextView storyNameTv, storyDateTv;
+        public TextView storyNameTv, storyDateTv, authorNameTv;
         public ImageButton optionIb;
 
         public StoryViewHolder(@NonNull View itemView) {
@@ -207,6 +231,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             storyImageIv = itemView.findViewById(R.id.storyImageIv);
             storyNameTv = itemView.findViewById(R.id.storyNameTv);
             storyDateTv = itemView.findViewById(R.id.storyDateTv);
+            authorNameTv = itemView.findViewById(R.id.authorNameTv);
             optionIb = itemView.findViewById(R.id.optionIb);
 
         }

@@ -17,5 +17,7 @@ public class LocalDBContract {
         public static final String KEY_CATEGORY_ID = "storyCategoryId";
         public static final String KEY_PLAYLIST_ID = "storyPlaylistId";
         public static final String KEY_SEARCH_TAG = "storySearchTag";
+        public static final String KEY_AUTHOR_ID = "authorId";
+        public static final String KEY_AUTHOR_NAME = "authorName";
     }
 }

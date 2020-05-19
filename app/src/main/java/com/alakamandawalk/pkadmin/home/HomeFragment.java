@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView storyRv, categoryRv, simpleCategoryRv;
     TextView storyCountTv, sortStoriesTv, seeAllCategoriesTv;
+    LinearLayout categoryLL;
     StoryAdapter storyAdapter;
     List<StoryData> storyList;
     CategoryAdapter categoryAdapter;
@@ -80,6 +82,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        categoryLL = view.findViewById(R.id.categoryLL);
         storyRv = view.findViewById(R.id.storyRv);
         categoryRv = view.findViewById(R.id.categoryRv);
         seeAllCategoriesTv = view.findViewById(R.id.seeAllCategoriesTv);
@@ -91,7 +94,7 @@ public class HomeFragment extends Fragment {
 
         AdView adView = new AdView(getActivity());
         adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+        adView.setAdUnitId("ca-app-pub-7611458447394787/2180536786");
 
         MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
             @Override
@@ -134,13 +137,13 @@ public class HomeFragment extends Fragment {
                 if (showHide){
                     showHide = false;
                     simpleCategoryRv.setVisibility(View.GONE);
-                    categoryRv.setVisibility(View.VISIBLE);
+                    categoryLL.setVisibility(View.VISIBLE);
                     seeAllCategoriesTv.setText("SHOW ALL");
 
                 }else {
                     showHide = true;
                     simpleCategoryRv.setVisibility(View.VISIBLE);
-                    categoryRv.setVisibility(View.GONE);
+                    categoryLL.setVisibility(View.GONE);
                     seeAllCategoriesTv.setText("SHOW LESS");
                 }
             }
@@ -316,7 +319,8 @@ public class HomeFragment extends Fragment {
 
         showHide = false;
         simpleCategoryRv.setVisibility(View.GONE);
-        categoryRv.setVisibility(View.VISIBLE);
+        categoryLL.setVisibility(View.VISIBLE);
         seeAllCategoriesTv.setText("SHOW ALL");
+        loadStories("byDateAsc");
     }
 }

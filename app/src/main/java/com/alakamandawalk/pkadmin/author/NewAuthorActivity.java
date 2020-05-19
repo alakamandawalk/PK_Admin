@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -57,6 +59,7 @@ public class NewAuthorActivity extends AppCompatActivity {
     EditText authorIdEt, authorNameEt, authorPostEt, authorDescriptionEt;
     ImageView authorCoverImg, authorProfileImg;
     Button addOrUpdateAuthorBtn;
+    ImageButton backIb;
 
     ProgressDialog pd;
 
@@ -75,6 +78,7 @@ public class NewAuthorActivity extends AppCompatActivity {
         authorNameEt = findViewById(R.id.authorNameEt);
         authorPostEt = findViewById(R.id.authorPostEt);
         authorDescriptionEt = findViewById(R.id.authorDescriptionEt);
+        backIb = findViewById(R.id.backIb);
 
         pd = new ProgressDialog(this);
 
@@ -123,6 +127,13 @@ public class NewAuthorActivity extends AppCompatActivity {
 
                 uploadData(authorId, authorName, authorPost, authorDescription);
 
+            }
+        });
+
+        backIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }
@@ -357,5 +368,27 @@ public class NewAuthorActivity extends AppCompatActivity {
         if (profileOrCoverImg.equals("coverImage")) {
             authorCoverImg.setImageURI(image_uri);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
+        builder.setTitle("Are you sure?");
+        builder.setMessage("cancel working and leave...");
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                NewAuthorActivity.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
     }
 }

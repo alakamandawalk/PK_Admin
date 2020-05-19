@@ -32,7 +32,6 @@
                 android:textColor="@color/primaryTextColor"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:text="story title"
                 android:padding="5dp"/>
 
             <RelativeLayout
@@ -44,7 +43,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="h.p. Kusumlatha"
                     android:textColor="@color/primaryTextColor"
                     android:padding="5dp"/>
 
@@ -55,7 +53,6 @@
                     android:textSize="15sp"
                     android:padding="5dp"
                     android:textColor="@color/primaryTextColor"
-                    android:text="21/05/2020"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"/>
 

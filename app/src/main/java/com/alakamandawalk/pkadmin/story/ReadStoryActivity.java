@@ -21,12 +21,15 @@ import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.LoginActivity;
 import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.author.AuthorProfileActivity;
 import com.alakamandawalk.pkadmin.localdb.LocalDBContract;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.alakamandawalk.pkadmin.playlist.PlaylistActivity;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -55,12 +58,8 @@ public class ReadStoryActivity extends AppCompatActivity {
 
     DBHelper localDb;
 
-    FirebaseUser user;
-    String uid;
-
     String storyName, story, storyImage, storyDate, storyCategoryId, storyPlaylistId, storySearchTag;
-
-    String storyPlaylistIdToPut;
+    String authorId, authorName;
 
     ProgressDialog pd;
 
@@ -87,11 +86,12 @@ public class ReadStoryActivity extends AppCompatActivity {
         storyTv = findViewById(R.id.storyTv);
         storyImg = findViewById(R.id.storyImg);
         dateTv = findViewById(R.id.dateTv);
+        authorNameTv = findViewById(R.id.authorNameTv);
         downloadBtnTipTv = findViewById(R.id.downloadBtnTipTv);
 
         AdView adView = new AdView(this);
         adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
+        adView.setAdUnitId("ca-app-pub-7611458447394787/2180536786");
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -101,8 +101,6 @@ public class ReadStoryActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
-        checkUserStatus();
 
         isOnDownloads(storyId);
 
@@ -124,9 +122,9 @@ public class ReadStoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (storyPlaylistIdToPut.length()>9){
+                if (storyPlaylistId.length()>9){
 
-                    String checkedPlaylist = storyPlaylistIdToPut.substring(0,10);
+                    String checkedPlaylist = storyPlaylistId.substring(0,10);
 
                     if (checkedPlaylist.equals("noplaylist")){
 
@@ -134,15 +132,24 @@ public class ReadStoryActivity extends AppCompatActivity {
                     }else{
 
                         Intent intent = new Intent(ReadStoryActivity.this, PlaylistActivity.class);
-                        intent.putExtra("playlistId",storyPlaylistIdToPut);
+                        intent.putExtra("playlistId",storyPlaylistId);
                         startActivity(intent);
                     }
                 }else {
 
                     Intent intent = new Intent(ReadStoryActivity.this, PlaylistActivity.class);
-                    intent.putExtra("playlistId",storyPlaylistIdToPut);
+                    intent.putExtra("playlistId",storyPlaylistId);
                     startActivity(intent);
                 }
+            }
+        });
+
+        authorIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReadStoryActivity.this, AuthorProfileActivity.class);
+                intent.putExtra("authorId", authorId);
+                startActivity(intent);
             }
         });
 
@@ -154,10 +161,12 @@ public class ReadStoryActivity extends AppCompatActivity {
         Cursor cursor = localDb.getStory(id);
         cursor.moveToFirst();
 
-        String storyName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_NAME));
-        String story = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_STORY));
-        String storyDate = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_DATE));
-        storyPlaylistIdToPut = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_PLAYLIST_ID));
+        storyName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_NAME));
+        story = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_STORY));
+        storyDate = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_DATE));
+        storyPlaylistId = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_PLAYLIST_ID));
+        authorId = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_AUTHOR_ID));
+        authorName = cursor.getString(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_AUTHOR_NAME));
         byte[] storyImage = cursor.getBlob(cursor.getColumnIndex(LocalDBContract.LocalDBEntry.KEY_IMAGE));
 
         if (!cursor.isClosed()){
@@ -176,6 +185,7 @@ public class ReadStoryActivity extends AppCompatActivity {
         titleTv.setText(storyName);
         storyTv.setText(story);
         dateTv.setText(storyDate);
+        authorNameTv.setText(authorName);
 
     }
 
@@ -220,7 +230,6 @@ public class ReadStoryActivity extends AppCompatActivity {
                     Toast.makeText(ReadStoryActivity.this, "Removed!", Toast.LENGTH_SHORT).show();
                     isOnDownloads(id);
                     pd.dismiss();
-                    finish();
                 }
             });
             builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
@@ -244,7 +253,7 @@ public class ReadStoryActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             final byte[] data = baos.toByteArray();
 
-            localDb.insertStory(id, storyName, story, storyDate, storyCategoryId, storyPlaylistId, storySearchTag, data);
+            localDb.insertStory(id, storyName, story, storyDate, storyCategoryId, storyPlaylistId, storySearchTag,authorId, authorName, data);
 
             Toast.makeText(ReadStoryActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
             isOnDownloads(id);
@@ -270,11 +279,11 @@ public class ReadStoryActivity extends AppCompatActivity {
                     storyName = ds.child("storyName").getValue().toString();
                     story = ds.child("story").getValue().toString();
                     storyImage = ds.child("storyImage").getValue().toString();
-                    storyPlaylistIdToPut = ds.child("storyPlaylistId").getValue().toString();
                     storyCategoryId = ds.child("storyCategoryId").getValue().toString();
                     storyPlaylistId = ds.child("storyPlaylistId").getValue().toString();
                     storySearchTag = ds.child("storySearchTag").getValue().toString();
                     String timeStamp  = ds.child("storyDate").getValue().toString();
+                    authorId = ds.child("authorId").getValue().toString();
 
                     java.util.Calendar calendar = Calendar.getInstance(Locale.getDefault());
                     calendar.setTimeInMillis(Long.parseLong(timeStamp));
@@ -294,8 +303,8 @@ public class ReadStoryActivity extends AppCompatActivity {
                     titleTv.setText(storyName);
                     storyTv.setText(story);
                     dateTv.setText(storyDate);
+                    getAuthorDetails();
                 }
-
                 pd.dismiss();
             }
 
@@ -308,18 +317,30 @@ public class ReadStoryActivity extends AppCompatActivity {
 
     }
 
-    private void checkUserStatus() {
+    private void getAuthorDetails() {
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
+        DatabaseReference authorRef = FirebaseDatabase.getInstance().getReference("author");
+        Query query = authorRef.orderByChild("authorId").equalTo(authorId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
 
-        if (user != null){
+                    authorName = ds.child("authorName").getValue().toString();
+                    authorNameTv.setText(authorName);
+                }
+            }
 
-            uid = user.getUid();
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ReadStoryActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        }else {
-            startActivity(new Intent(ReadStoryActivity.this, LoginActivity.class));
-            finish();
-        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

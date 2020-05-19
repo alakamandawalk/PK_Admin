@@ -14,11 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".author.NewAuthorActivity"></activity>
+        <activity android:name=".author.AuthorProfileActivity"></activity>
+        <activity android:name=".author.NewAuthorActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-7611458447394787~3213103771" />
 
         <activity android:name=".author.AuthorActivity" />
         <activity android:name=".message.NewMsgActivity" />
