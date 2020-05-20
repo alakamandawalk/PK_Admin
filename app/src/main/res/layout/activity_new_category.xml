@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".category.NewCategoryActivity">
+    tools:context=".category.NewCategoryActivity"
+    android:background="@color/primaryBgColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,13 +37,14 @@
                         android:src="@drawable/ic_arrow_back_holo_dark"
                         android:background="@null"
                         android:layout_margin="10dp"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:tint="@color/primaryTextColor"/>
 
                     <TextView
                         android:id="@+id/titleTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="20sp"
                         android:gravity="center"/>
 

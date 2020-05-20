@@ -14,6 +14,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.SettingsFragment;
 import com.alakamandawalk.pkadmin.story.StoryAdapter;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.google.android.gms.ads.AdRequest;
@@ -42,8 +43,6 @@ public class CategoryActivity extends AppCompatActivity {
     StoryAdapter storyAdapter;
     List<StoryData> storyDataList;
 
-    private AdView mAdView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +57,6 @@ public class CategoryActivity extends AppCompatActivity {
         categoryListRv = findViewById(R.id.categoryListRv);
         categoryTitleTv = findViewById(R.id.categoryTitleTv);
         searchView = findViewById(R.id.searchView);
-
-        AdView adView = new AdView(this);
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
-
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);

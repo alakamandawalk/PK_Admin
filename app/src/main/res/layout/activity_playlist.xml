@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".playlist.PlaylistActivity"
-    android:background="@color/primaryDarkColor">
+    android:background="@color/primaryBgColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,8 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:background="#99000000">
+                app:layout_scrollFlags="scroll|enterAlways">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -50,7 +49,8 @@
                             android:src="@drawable/ic_arrow_back_holo_dark"
                             android:background="@null"
                             android:layout_gravity="center"
-                            android:padding="10dp"/>
+                            android:padding="10dp"
+                            android:tint="@color/primaryTextColor"/>
 
                         <TextView
                             android:id="@+id/playlistNameTv"
@@ -59,7 +59,7 @@
                             android:textSize="18sp"
                             android:layout_gravity="center"
                             android:textColor="@color/primaryTextColor"
-                            android:layout_marginLeft="10dp"/>
+                            android:layout_marginLeft="10dp" />
 
                     </LinearLayout>
 
@@ -71,7 +71,8 @@
                         android:background="@null"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:padding="10dp"/>
+                        android:padding="10dp"
+                        android:tint="@color/primaryTextColor"/>
 
                 </RelativeLayout>
 
@@ -82,28 +83,5 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_playlist_activity"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-        </LinearLayout>
-
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
-            android:layout_gravity="center_horizontal" />
-
-    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -8,8 +8,9 @@
     app:cardElevation="2dp"
     app:cardCornerRadius="4dp"
     android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginLeft="5dp">
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:background="@color/primaryColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +40,8 @@
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:padding="5dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/primaryTextColor"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -51,14 +53,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:padding="5dp"/>
+                        android:padding="5dp"
+                        android:textColor="@color/primaryTextColor"/>
 
                     <TextView
                         android:id="@+id/storyDateTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:padding="5dp"/>
+                        android:padding="5dp"
+                        android:textColor="@color/primaryTextColor"/>
 
                 </LinearLayout>
 
@@ -72,7 +76,8 @@
                 android:layout_alignParentRight="true"
                 android:background="@null"
                 android:layout_alignParentTop="true"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:textColor="@color/primaryTextColor"/>
 
         </LinearLayout>
 

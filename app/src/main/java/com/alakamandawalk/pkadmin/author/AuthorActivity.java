@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.SettingsFragment;
 import com.alakamandawalk.pkadmin.model.AuthorData;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;

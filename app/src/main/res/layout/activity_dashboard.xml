@@ -6,76 +6,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardActivity"
-    android:background="@color/primaryDarkColor">
+    android:background="@color/primaryBgColor"
+    android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Library">
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <RelativeLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/titleTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    android:layout_centerVertical="true"/>
+                android:layout_height="?attr/actionBarSize">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_alignParentRight="true">
+                    android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/searchIb"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/titleTv"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_search_holo_dark"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        android:padding="10dp"/>
+                        android:layout_weight="1"
+                        android:textColor="@color/primaryTextColor"
+                        android:textSize="20sp"
+                        android:layout_gravity="center_vertical"
+                        android:text="Home"/>
 
-                    <ImageButton
-                        android:id="@+id/menuIb"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_menu"
-                        android:layout_gravity="center"
-                        android:background="@null"
-                        android:padding="10dp"/>
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_alignParentRight="true">
+
+                        <ImageButton
+                            android:id="@+id/searchIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_search_holo_dark"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:padding="10dp"
+                            android:tint="@color/primaryTextColor"/>
+
+                        <ImageButton
+                            android:id="@+id/menuIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_menu"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:padding="10dp"
+                            android:tint="@color/primaryTextColor"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            app:layout_anchor="@id/appBarLayout"
+            app:layout_anchorGravity="bottom"
+            android:layout_marginBottom="40dp">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        app:layout_anchor="@id/appBarLayout"
-        app:layout_anchorGravity="bottom"
-        android:layout_marginBottom="40dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </FrameLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"

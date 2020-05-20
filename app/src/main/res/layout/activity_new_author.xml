@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".author.NewAuthorActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/primaryBgColor">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -30,14 +31,16 @@
                     android:src="@drawable/ic_arrow_back_holo_dark"
                     android:background="@null"
                     android:layout_gravity="center"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:tint="@color/primaryTextColor"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Author"
                     android:textSize="20sp"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/primaryTextColor"/>
 
             </LinearLayout>
 
@@ -75,7 +78,7 @@
                     android:src="@drawable/img_place_holder"
                     android:scaleType="centerCrop"
                     app:civ_border_width="5dp"
-                    app:civ_border_color="@color/primaryTextColor"/>
+                    app:civ_border_color="@color/authorProPicBorderColor"/>
 
             </RelativeLayout>
 

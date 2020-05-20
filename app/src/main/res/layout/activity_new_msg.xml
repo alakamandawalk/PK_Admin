@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".message.NewMsgActivity"
-    android:background="@color/storyBgColor">
+    android:background="@color/primaryBgColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/secondaryLightColor"
+                android:background="@color/primaryTextColor"
                 android:layout_alignParentBottom="true"/>
 
         </LinearLayout>
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_attachment_holo_dark"
             android:background="@drawable/round_background_white"
-            android:tint="@color/primaryDarkColor"
+            android:tint="@color/primaryTextColor"
             android:padding="10dp"
             android:layout_marginRight="5dp"
             android:layout_gravity="bottom"/>
@@ -86,7 +86,7 @@
                     android:id="@+id/attachStoryLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/primaryLightColor"
+                    android:background="@color/secondaryLightColor"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp">
@@ -119,7 +119,8 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:textSize="16sp"
-                    android:inputType="textMultiLine"/>
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/primaryTextColor"/>
 
             </LinearLayout>
 

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#ffffff</color>
-    <color name="primaryLightColor">#ffffff</color>
-    <color name="primaryDarkColor">#aaaaaa</color>
-    <color name="primaryBgColor">#ffffff</color>
+    <color name="primaryColor">#424242</color>
+    <color name="primaryLightColor">#6d6d6d</color>
+    <color name="primaryDarkColor">#1b1b1b</color>
+    <color name="primaryBgColor">#1b1b1b</color>
     <color name="secondaryColor">#c0ca33</color>
     <color name="secondaryLightColor">#f5fd67</color>
     <color name="secondaryDarkColor">#8c9900</color>
-    <color name="primaryTextColor">#000000</color>
+    <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="storyBgColor">#bdbdbd</color>
     <color name="storyTextColor">#424242</color>
-    <color name="bottomNavIconCheckedColor">#8c9900</color>
-    <color name="bottomNavIconColor">#000000</color>
+    <color name="bottomNavIconCheckedColor">#f5fd67</color>
+    <color name="bottomNavIconColor">#6d6d6d</color>
     <color name="categoryRowBottomLineColor">#992c2c2c</color>
     <color name="categoryRowBottomTextColor">#ffffff</color>
-    <color name="authorProPicBorderColor">#ffffff</color>
+    <color name="authorProPicBorderColor">#1b1b1b</color>
 </resources>

@@ -8,8 +8,8 @@
     app:cardElevation="2dp"
     android:background="@color/primaryColor"
     app:cardCornerRadius="4dp"
+    android:layout_marginBottom="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp">
 
     <LinearLayout
@@ -36,14 +36,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:padding="5dp"
-                android:lineSpacingExtra="10dp"/>
+                android:lineSpacingExtra="10dp"
+                android:textColor="@color/primaryTextColor"/>
 
             <TextView
                 android:id="@+id/storyDateTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:textColor="@color/primaryTextColor"/>
 
         </LinearLayout>
 

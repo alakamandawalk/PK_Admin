@@ -76,7 +76,8 @@
                         android:padding="10dp"
                         android:src="@drawable/ic_person_holo_dark"
                         android:background="@null"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:tint="@color/primaryTextColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -100,7 +101,8 @@
                         android:src="@drawable/ic_download_holo_dark"
                         android:background="@null"
                         android:padding="10dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:tint="@color/primaryTextColor"/>
 
                     <TextView
                         android:id="@+id/downloadBtnTipTv"
@@ -125,7 +127,8 @@
                         android:src="@drawable/ic_playlist_holo_dark"
                         android:background="@null"
                         android:padding="10dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:tint="@color/primaryTextColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -149,7 +152,8 @@
                         android:src="@drawable/ic_related_holo_dark"
                         android:background="@null"
                         android:padding="10dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:tint="@color/primaryTextColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"

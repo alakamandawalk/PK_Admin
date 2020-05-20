@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/primaryDarkColor"/>
+                    android:textColor="@color/primaryTextColor"/>
 
                 <TextView
                     android:id="@+id/storyTitleTv"
@@ -37,19 +37,19 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:padding="10dp"
-                    android:background="@color/primaryLightColor"
+                    android:background="@color/primaryDarkColor"
                     android:textColor="@color/primaryTextColor"/>
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/timeTv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textAlignment="textStart"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/secondaryLightColor"/>
+                android:textColor="@color/primaryTextColor"/>
 
         </LinearLayout>
 

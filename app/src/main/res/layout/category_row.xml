@@ -39,8 +39,8 @@
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:textSize="16sp"
-            android:textColor="@color/primaryTextColor"
-            android:background="#992c2c2c"
+            android:textColor="@color/categoryRowBottomTextColor"
+            android:background="@color/categoryRowBottomLineColor"
             android:layout_alignParentBottom="true"/>
 
 

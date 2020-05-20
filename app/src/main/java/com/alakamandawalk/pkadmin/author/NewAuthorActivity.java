@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.DashboardActivity;
 import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.SettingsFragment;
 import com.alakamandawalk.pkadmin.story.AddOrEditStoryActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -198,6 +199,9 @@ public class NewAuthorActivity extends AppCompatActivity {
 
                                                             pd.dismiss();
                                                             Toast.makeText(NewAuthorActivity.this, "author added!", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(NewAuthorActivity.this, AuthorProfileActivity.class);
+                                                            intent.putExtra("authorId", authorId);
+                                                            startActivity(intent);
 
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {

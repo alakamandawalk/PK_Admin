@@ -79,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
                 PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuIb, Gravity.END);
                 popupMenu.getMenu().add(Menu.NONE, 0,0,"New");
                 popupMenu.getMenu().add(Menu.NONE, 1,1,"Sign Out");
+                popupMenu.getMenu().add(Menu.NONE, 2,2,"Settings");
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -107,6 +108,10 @@ public class DashboardActivity extends AppCompatActivity {
                                         }
                                     });
                             builder.create().show();
+                        }
+
+                        if (id==2){
+                            startActivity(new Intent(DashboardActivity.this, SettingsActivity.class));
                         }
 
                         return false;

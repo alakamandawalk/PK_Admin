@@ -31,7 +31,17 @@
                     android:src="@drawable/ic_arrow_back_holo_dark"
                     android:background="@null"
                     android:layout_gravity="center"
-                    android:padding="10dp"/>
+                    android:padding="10dp"
+                    android:tint="@color/primaryTextColor"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/primaryTextColor"
+                    android:layout_marginLeft="10dp"
+                    android:text="Happy Reading :)"/>
 
             </LinearLayout>
 
@@ -39,19 +49,15 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_read_story"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <include layout="@layout/content_read_story"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-        </LinearLayout>
+            android:layout_weight="1"/>
 
         <com.google.android.gms.ads.AdView
             xmlns:ads="http://schemas.android.com/apk/res-auto"

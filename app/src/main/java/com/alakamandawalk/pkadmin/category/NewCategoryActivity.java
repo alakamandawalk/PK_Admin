@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.NewActivity;
 import com.alakamandawalk.pkadmin.R;
+import com.alakamandawalk.pkadmin.SettingsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
