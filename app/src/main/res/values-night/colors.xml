@@ -7,13 +7,17 @@
     <color name="secondaryColor">#c0ca33</color>
     <color name="secondaryLightColor">#f5fd67</color>
     <color name="secondaryDarkColor">#8c9900</color>
-    <color name="primaryTextColor">#ffffff</color>
+    <color name="primaryTextColor">#cccccc</color>
     <color name="secondaryTextColor">#000000</color>
-    <color name="storyBgColor">#bdbdbd</color>
-    <color name="storyTextColor">#424242</color>
+    <color name="storyBgColor">#424242</color>
+    <color name="storyTextColor">#bdbdbd</color>
     <color name="bottomNavIconCheckedColor">#f5fd67</color>
     <color name="bottomNavIconColor">#6d6d6d</color>
     <color name="categoryRowBottomLineColor">#992c2c2c</color>
-    <color name="categoryRowBottomTextColor">#ffffff</color>
-    <color name="authorProPicBorderColor">#1b1b1b</color>
+    <color name="categoryRowBottomTextColor">#cccccc</color>
+    <color name="authorProPicBorderColor">#424242</color>
+    <color name="msgTagStoryNameTextColor">#cccccc</color>
+    <color name="bottomNavBgColor">#1b1b1b</color>
+    <color name="relatedListBgColor">#cc000000</color>
+    <color name="imgOverlay">#4d000000</color>
 </resources>

@@ -7,6 +7,7 @@
     android:id="@+id/favStoryCv"
     app:cardElevation="2dp"
     android:background="@color/primaryColor"
+    app:cardBackgroundColor="@color/primaryColor"
     app:cardCornerRadius="4dp"
     android:layout_marginBottom="5dp"
     android:layout_marginRight="5dp"
@@ -22,7 +23,8 @@
             android:layout_width="120dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:foreground="@color/imgOverlay"/>
 
         <LinearLayout
             android:layout_width="match_parent"

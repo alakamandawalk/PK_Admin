@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:scrollbars="vertical"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:fastScrollAlwaysVisible="true"
+    android:fastScrollEnabled="false"
+    android:fastScrollThumbDrawable="@drawable/scroller_style"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
@@ -12,182 +17,253 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/storyImg"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:scaleType="centerCrop"/>
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/primaryColor"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/titleTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:padding="5dp"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/authorNameTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/primaryTextColor"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:id="@+id/dateTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"/>
-
-            </RelativeLayout>
+            app:cardCornerRadius="0dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/primaryColor">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp">
+
+                    <ImageView
+                        android:id="@+id/storyImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:foreground="@color/imgOverlay"/>
+
+                    <RelativeLayout
+                        android:id="@+id/showRelRl"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/relatedListBgColor">
+
+                        <ProgressBar
+                            android:id="@+id/relStoryPb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"/>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/relatedStoryRv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/authorIb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_person_holo_dark"
-                        android:background="@null"
-                        android:layout_gravity="center_horizontal"
-                        android:tint="@color/primaryTextColor"/>
+                    android:orientation="vertical"
+                    android:layout_margin="5dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/titleTv"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="author"
                         android:textColor="@color/primaryTextColor"
-                        android:layout_gravity="center_horizontal"/>
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:padding="5dp"/>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/downloadIb"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_download_holo_dark"
-                        android:background="@null"
-                        android:padding="10dp"
-                        android:layout_gravity="center_horizontal"
-                        android:tint="@color/primaryTextColor"/>
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/downloadBtnTipTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="download"
-                        android:textColor="@color/primaryTextColor"
-                        android:layout_gravity="center_horizontal"/>
+                        <TextView
+                            android:id="@+id/authorNameTv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textSize="18sp"
+                            android:textColor="@color/primaryTextColor"
+                            android:padding="5dp"/>
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/dateTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:padding="5dp"
+                            android:textColor="@color/primaryTextColor"/>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/playListIb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_playlist_holo_dark"
-                        android:background="@null"
-                        android:padding="10dp"
-                        android:layout_gravity="center_horizontal"
-                        android:tint="@color/primaryTextColor"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="playlist"
-                        android:textColor="@color/primaryTextColor"
-                        android:layout_gravity="center_horizontal"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/relatedStoriesIb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_related_holo_dark"
-                        android:background="@null"
-                        android:padding="10dp"
-                        android:layout_gravity="center_horizontal"
-                        android:tint="@color/primaryTextColor"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="related"
-                        android:textColor="@color/primaryTextColor"
-                        android:layout_gravity="center_horizontal"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/storyTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="22sp"
-                android:layout_marginTop="20dp"
-                android:lineSpacingExtra="15dp"
-                android:textColor="@color/storyTextColor"/>
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/primaryColor"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="4dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/authorIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_person_holo_dark"
+                            android:background="@null"
+                            android:layout_gravity="center_horizontal"
+                            android:tint="@color/primaryTextColor"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="author"
+                            android:textColor="@color/primaryTextColor"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/downloadIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_download_holo_dark"
+                            android:background="@null"
+                            android:padding="10dp"
+                            android:layout_gravity="center_horizontal"
+                            android:tint="@color/primaryTextColor"/>
+
+                        <TextView
+                            android:id="@+id/downloadBtnTipTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="download"
+                            android:textColor="@color/primaryTextColor"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/playListIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_playlist_holo_dark"
+                            android:background="@null"
+                            android:padding="10dp"
+                            android:layout_gravity="center_horizontal"
+                            android:tint="@color/primaryTextColor"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="playlist"
+                            android:textColor="@color/primaryTextColor"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/relatedStoriesIb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_related_holo_dark"
+                            android:background="@null"
+                            android:padding="10dp"
+                            android:layout_gravity="center_horizontal"
+                            android:tint="@color/primaryTextColor"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="related"
+                            android:textColor="@color/primaryTextColor"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp"
+            app:cardBackgroundColor="@color/storyBgColor"
+            app:cardElevation="2dp"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/storyTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textSize="22sp"
+                    android:lineSpacingExtra="15dp"
+                    android:textColor="@color/storyTextColor"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

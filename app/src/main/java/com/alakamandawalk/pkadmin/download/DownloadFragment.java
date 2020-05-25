@@ -1,7 +1,11 @@
 package com.alakamandawalk.pkadmin.download;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,14 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alakamandawalk.pkadmin.SettingsActivity;
 import com.alakamandawalk.pkadmin.localdb.DBHelper;
 import com.alakamandawalk.pkadmin.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 
 /**
@@ -30,8 +29,6 @@ public class DownloadFragment extends Fragment {
     RecyclerView favStoryRv;
     DownloadedStoryAdapter downloadedStoryAdapter;
 
-    private AdView mAdView;
-
     public DownloadFragment() {
         // Required empty public constructor
     }
@@ -43,20 +40,9 @@ public class DownloadFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_download, container, false);
 
+        checkNightModeActivated();
+
         favStoryRv = view.findViewById(R.id.favStoryRv);
-
-        AdView adView = new AdView(getActivity());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
-
-        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         dbHelper = new DBHelper(getActivity());
 
@@ -70,6 +56,18 @@ public class DownloadFragment extends Fragment {
         return view;
     }
 
+    private void checkNightModeActivated() {
+
+        SharedPreferences themePref = getActivity().getSharedPreferences(SettingsActivity.THEME_PREFERENCE, Context.MODE_PRIVATE);
+        boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
+
+        if (isDarkMode){
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
     private void loadStories() {
 
         downloadedStoryAdapter = new DownloadedStoryAdapter(getActivity(), dbHelper.getAllStories());
@@ -80,6 +78,7 @@ public class DownloadFragment extends Fragment {
     @Override
     public void onResume() {
         loadStories();
+        checkNightModeActivated();
         super.onResume();
     }
 }

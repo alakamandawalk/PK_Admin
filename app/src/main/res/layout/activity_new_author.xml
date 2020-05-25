@@ -67,7 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="230dp"
                     android:src="@drawable/img_place_holder"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:foreground="@color/imgOverlay"/>
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/authorProfileImg"

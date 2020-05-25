@@ -93,7 +93,7 @@
         android:layout_height="40dp"
         app:menu="@menu/menu_nav"
         app:labelVisibilityMode="unlabeled"
-        app:itemBackground="@color/primaryColor"
+        app:itemBackground="@color/bottomNavBgColor"
         app:itemIconTint="@drawable/bottom_nav_colors"
         android:layout_gravity="bottom"/>
 

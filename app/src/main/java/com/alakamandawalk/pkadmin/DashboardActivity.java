@@ -2,11 +2,13 @@ package com.alakamandawalk.pkadmin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,9 +37,9 @@ public class DashboardActivity extends AppCompatActivity {
 
 
     ImageButton menuIb, searchIb;
-    TextView titleTv;
+    public static TextView titleTv;
 
-    FrameLayout frameLayout;
+    public static FrameLayout frameLayout;
     BottomNavigationView bottomNav;
 
 
@@ -47,6 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        checkNightModeActivated();
         checkUserStatus();
 
         frameLayout = findViewById(R.id.frameLayout);
@@ -122,6 +125,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -146,24 +150,6 @@ public class DashboardActivity extends AppCompatActivity {
                     else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                             || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
 
-                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(DashboardActivity.this, R.style.AlertDialogTheme);
-                        builder.setTitle("Not Connected!");
-                        builder.setMessage("you can still read downloaded stories!");
-                        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                titleTv.setText("Downloads");
-                                DownloadFragment downloadFragment = new DownloadFragment();
-                                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                                ft2.replace(R.id.frameLayout, downloadFragment, "");
-                                ft2.commit();
-                                item.setChecked(true);
-
-                            }
-                        });
-
-                        builder.create().show();
                     }
 
                     return true;
@@ -221,34 +207,23 @@ public class DashboardActivity extends AppCompatActivity {
         ft1.replace(R.id.frameLayout, homeFragment, "");
         ft1.commit();
 
-        ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
 
-        if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
-                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
+    private void checkNightModeActivated(){
 
+        SharedPreferences themePref = getSharedPreferences(SettingsActivity.THEME_PREFERENCE, MODE_PRIVATE);
+        boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
 
+        if (isDarkMode){
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
-                || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
+    }
 
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
-            builder.setTitle("Not Connected!");
-            builder.setMessage("you can still read downloaded stories!");
-            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    titleTv.setText("Downloads");
-                    DownloadFragment downloadFragment = new DownloadFragment();
-                    FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                    ft2.replace(R.id.frameLayout, downloadFragment, "");
-                    ft2.commit();
-
-                }
-            });
-
-            builder.create().show();
-        }
-
+    @Override
+    protected void onResume() {
+        checkNightModeActivated();
+        super.onResume();
     }
 }

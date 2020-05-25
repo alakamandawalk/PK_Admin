@@ -1,9 +1,13 @@
 package com.alakamandawalk.pkadmin.explore;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,14 +16,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.SettingsActivity;
 import com.alakamandawalk.pkadmin.author.AuthorActivity;
 import com.alakamandawalk.pkadmin.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,8 +26,6 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 public class ExploreFragment extends Fragment {
 
     ImageButton authorsIb, requestStoryIb, rateUsIb, likeUsFBIb, otherAppsIb, aboutUsIb;
-
-    private AdView mAdView;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -41,25 +38,14 @@ public class ExploreFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
+        checkNightModeActivated();
+
         authorsIb = view.findViewById(R.id.authorsIb);
         requestStoryIb = view.findViewById(R.id.requestStoryIb);
         rateUsIb = view.findViewById(R.id.rateUsIb);
         likeUsFBIb = view.findViewById(R.id.likeUsFBIb);
         otherAppsIb = view.findViewById(R.id.otherAppsIb);
         aboutUsIb = view.findViewById(R.id.aboutUsIb);
-
-        AdView adView = new AdView(getActivity());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
-
-        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         likeUsFBIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,5 +90,23 @@ public class ExploreFragment extends Fragment {
             Toast.makeText(getActivity(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void checkNightModeActivated() {
+
+        SharedPreferences themePref = getActivity().getSharedPreferences(SettingsActivity.THEME_PREFERENCE, Context.MODE_PRIVATE);
+        boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
+
+        if (isDarkMode){
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        checkNightModeActivated();
+        super.onResume();
     }
 }

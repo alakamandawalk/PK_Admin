@@ -2,16 +2,18 @@
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.SettingsFragment;
+import com.alakamandawalk.pkadmin.SettingsActivity;
 import com.alakamandawalk.pkadmin.model.AuthorData;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -30,8 +32,6 @@ import java.util.List;
 
  public class AuthorActivity extends AppCompatActivity {
 
-    private AdView mAdView;
-
     RecyclerView authorRv;
     ImageButton backIb;
 
@@ -43,7 +43,14 @@ import java.util.List;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_author);
 
-        initAds();
+        SharedPreferences themePref = getSharedPreferences(SettingsActivity.THEME_PREFERENCE, MODE_PRIVATE);
+        boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
+
+        if (isDarkMode){
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         authorRv = findViewById(R.id.authorRv);
         backIb = findViewById(R.id.backIb);
@@ -78,9 +85,7 @@ import java.util.List;
                      authorDataList.add(authorData);
                      authorAdapter = new AuthorAdapter(AuthorActivity.this, authorDataList);
                      authorRv.setAdapter(authorAdapter);
-
                  }
-
              }
 
              @Override
@@ -90,22 +95,4 @@ import java.util.List;
          });
 
      }
-
-     private void initAds() {
-
-         AdView adView = new AdView(this);
-         adView.setAdSize(AdSize.BANNER);
-         adView.setAdUnitId("ca-app-pub-3940256099942544~3347511713");
-
-         MobileAds.initialize(this, new OnInitializationCompleteListener() {
-             @Override
-             public void onInitializationComplete(InitializationStatus initializationStatus) {
-             }
-         });
-         mAdView = findViewById(R.id.adView);
-         AdRequest adRequest = new AdRequest.Builder().build();
-         mAdView.loadAd(adRequest);
-
-     }
-
  }

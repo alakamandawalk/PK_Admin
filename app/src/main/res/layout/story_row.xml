@@ -10,7 +10,8 @@
     android:layout_marginRight="5dp"
     android:layout_marginBottom="5dp"
     android:layout_marginLeft="5dp"
-    android:background="@color/primaryColor">
+    android:background="@color/primaryColor"
+    app:cardBackgroundColor="@color/primaryColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +22,8 @@
             android:id="@+id/storyImageIv"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:foreground="@color/imgOverlay"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,11 +75,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_menu_dark"
-                android:layout_alignParentRight="true"
                 android:background="@null"
-                android:layout_alignParentTop="true"
                 android:padding="10dp"
-                android:textColor="@color/primaryTextColor"/>
+                android:tint="@color/primaryTextColor"/>
 
         </LinearLayout>
 

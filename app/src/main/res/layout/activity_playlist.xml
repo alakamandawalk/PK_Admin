@@ -24,7 +24,8 @@
                 android:id="@+id/playlistImageIv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:foreground="@color/imgOverlay"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"

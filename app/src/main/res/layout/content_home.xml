@@ -13,8 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,32 +38,46 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/categoryLL"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/categoryRv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/simpleCategoryRv"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/categoryCv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/primaryColor"
+                app:cardCornerRadius="0dp"
+                android:layout_marginBottom="5dp">
 
-            <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:orientation="horizontal">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/categoryRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/simpleCategoryCv"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/primaryTextColor"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="4dp"
+                app:cardBackgroundColor="@color/primaryColor"
+                app:cardElevation="2dp"
+                android:layout_margin="5dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/simpleCategoryRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"/>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -79,7 +92,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:text="2541 STORIES"
                 android:textColor="@color/secondaryColor"/>
 
             <TextView
@@ -92,11 +104,20 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/storyRv"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"/>
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/primaryBgColor"
+            app:cardCornerRadius="0dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/storyRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"/>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

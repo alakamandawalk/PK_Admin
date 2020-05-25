@@ -57,68 +57,95 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="280dp">
-
-                <ImageView
-                    android:id="@+id/authorCoverImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp"
-                    android:src="@drawable/img_place_holder"
-                    android:scaleType="centerCrop"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/authorProfileImg"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="180dp"
-                    android:layout_marginLeft="40dp"
-                    android:src="@drawable/img_place_holder"
-                    android:scaleType="centerCrop"
-                    app:civ_border_width="5dp"
-                    app:civ_border_color="@color/authorProPicBorderColor"/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="140dp"
-                    android:layout_alignParentBottom="true">
-
-                    <TextView
-                        android:id="@+id/storyCountTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:textColor="@color/primaryTextColor"/>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:cardBackgroundColor="@color/primaryColor"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="2dp">
 
-                <TextView
-                    android:id="@+id/authorNameTv"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"/>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/authorPostTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:padding="5dp"
-                    android:textColor="@color/primaryTextColor"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="280dp">
+
+                        <ImageView
+                            android:id="@+id/authorCoverImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="230dp"
+                            android:src="@drawable/img_place_holder"
+                            android:scaleType="centerCrop"
+                            android:foreground="@color/imgOverlay"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/authorProfileImg"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="180dp"
+                            android:layout_marginLeft="40dp"
+                            android:src="@drawable/img_place_holder"
+                            android:scaleType="centerCrop"
+                            app:civ_border_width="5dp"
+                            app:civ_border_color="@color/authorProPicBorderColor"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="140dp"
+                            android:layout_alignParentBottom="true">
+
+                            <TextView
+                                android:id="@+id/storyCountTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/primaryTextColor"/>
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/authorNameTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:padding="5dp"
+                            android:textColor="@color/primaryTextColor"/>
+
+                        <TextView
+                            android:id="@+id/authorPostTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:padding="5dp"
+                            android:textColor="@color/primaryTextColor"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/primaryColor"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:id="@+id/authorDescriptionTv"
@@ -129,7 +156,7 @@
                     android:textStyle="italic"
                     android:textColor="@color/primaryTextColor"/>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/authorStoryRv"

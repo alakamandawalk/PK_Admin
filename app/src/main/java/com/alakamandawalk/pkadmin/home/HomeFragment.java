@@ -2,14 +2,18 @@ package com.alakamandawalk.pkadmin.home;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,28 +23,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
-import android.widget.Switch;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alakamandawalk.pkadmin.DashboardActivity;
 import com.alakamandawalk.pkadmin.R;
-import com.alakamandawalk.pkadmin.category.CategoryActivity;
+import com.alakamandawalk.pkadmin.SettingsActivity;
 import com.alakamandawalk.pkadmin.category.CategoryAdapter;
 import com.alakamandawalk.pkadmin.category.SimpleCategoryAdapter;
+import com.alakamandawalk.pkadmin.download.DownloadFragment;
 import com.alakamandawalk.pkadmin.model.CategoryData;
 import com.alakamandawalk.pkadmin.model.StoryData;
 import com.alakamandawalk.pkadmin.story.StoryAdapter;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,17 +57,20 @@ public class HomeFragment extends Fragment {
 
 
     RecyclerView storyRv, categoryRv, simpleCategoryRv;
+    RelativeLayout homeContentRl;
+    LinearLayout noConnectionLl;
     TextView storyCountTv, sortStoriesTv, seeAllCategoriesTv;
-    LinearLayout categoryLL;
+    CardView categoryCv, simpleCategoryCv;
     StoryAdapter storyAdapter;
     List<StoryData> storyList;
     CategoryAdapter categoryAdapter;
     SimpleCategoryAdapter simpleCategoryAdapter;
     List<CategoryData> categoryList;
     ProgressDialog pd;
-    private boolean showHide = false;
+    ProgressBar homePb;
+    Button readDownloadsBtn;
 
-    private AdView mAdView;
+    private boolean showHide = false;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -82,7 +83,14 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        categoryLL = view.findViewById(R.id.categoryLL);
+        checkNightModeActivated();
+
+        categoryCv = view.findViewById(R.id.categoryCv);
+        readDownloadsBtn = view.findViewById(R.id.readDownloadsBtn);
+        noConnectionLl = view.findViewById(R.id.noConnectionLl);
+        homeContentRl = view.findViewById(R.id.homeContentLl);
+        homePb = view.findViewById(R.id.homePb);
+        simpleCategoryCv = view.findViewById(R.id.simpleCategoryCv);
         storyRv = view.findViewById(R.id.storyRv);
         categoryRv = view.findViewById(R.id.categoryRv);
         seeAllCategoriesTv = view.findViewById(R.id.seeAllCategoriesTv);
@@ -92,26 +100,12 @@ public class HomeFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
         seeAllCategoriesTv.setText("SHOW ALL");
 
-        AdView adView = new AdView(getActivity());
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-7611458447394787/2180536786");
-
-        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        mAdView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
         LinearLayoutManager categoryLayoutManager =
                 new LinearLayoutManager(getActivity(),
                         LinearLayoutManager.HORIZONTAL,
                         true);
         categoryLayoutManager.setStackFromEnd(true);
         categoryRv.setLayoutManager(categoryLayoutManager);
-
 
         LinearLayoutManager storyLayoutManager = new LinearLayoutManager(getActivity());
         storyLayoutManager.setStackFromEnd(true);
@@ -122,7 +116,7 @@ public class HomeFragment extends Fragment {
         simpleCategoryLayoutManager.setStackFromEnd(true);
         simpleCategoryLayoutManager.setReverseLayout(true);
         simpleCategoryRv.setLayoutManager(simpleCategoryLayoutManager);
-        simpleCategoryRv.setVisibility(View.GONE);
+        simpleCategoryCv.setVisibility(View.GONE);
 
 
         categoryList = new ArrayList<>();
@@ -136,14 +130,14 @@ public class HomeFragment extends Fragment {
 
                 if (showHide){
                     showHide = false;
-                    simpleCategoryRv.setVisibility(View.GONE);
-                    categoryLL.setVisibility(View.VISIBLE);
+                    simpleCategoryCv.setVisibility(View.GONE);
+                    categoryCv.setVisibility(View.VISIBLE);
                     seeAllCategoriesTv.setText("SHOW ALL");
 
                 }else {
                     showHide = true;
-                    simpleCategoryRv.setVisibility(View.VISIBLE);
-                    categoryLL.setVisibility(View.GONE);
+                    simpleCategoryCv.setVisibility(View.VISIBLE);
+                    categoryCv.setVisibility(View.GONE);
                     seeAllCategoriesTv.setText("SHOW LESS");
                 }
             }
@@ -154,6 +148,18 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 registerForContextMenu(sortStoriesTv);
                 getActivity().openContextMenu(v);
+            }
+        });
+
+        readDownloadsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DashboardActivity.titleTv.setText("Downloads");
+                DownloadFragment downloadFragment = new DownloadFragment();
+                FragmentTransaction ft2 = getActivity().getSupportFragmentManager().beginTransaction();
+                ft2.replace(R.id.frameLayout, downloadFragment, "");
+                ft2.addToBackStack(null);
+                ft2.commit();
             }
         });
 
@@ -236,10 +242,6 @@ public class HomeFragment extends Fragment {
 
     private void loadCategories() {
 
-        pd.setMessage("Loading...");
-        pd.show();
-        pd.setCanceledOnTouchOutside(false);
-
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("category");
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -255,14 +257,14 @@ public class HomeFragment extends Fragment {
                     categoryRv.setAdapter(categoryAdapter);
                     simpleCategoryRv.setAdapter(simpleCategoryAdapter);
 
-                    pd.dismiss();
                 }
+                homePb.setVisibility(View.GONE);
+                homeContentRl.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getActivity(), ""+ databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                pd.dismiss();
             }
         });
     }
@@ -273,14 +275,19 @@ public class HomeFragment extends Fragment {
 
         if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED ) {
+            homeContentRl.setVisibility(View.GONE);
             loadCategories();
-            loadStories("shuffle");
+            loadStories("byDateAsc");
+            noConnectionLl.setVisibility(View.GONE);
         }
         else if ( conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
 
-        }
+            homeContentRl.setVisibility(View.GONE);
+            homePb.setVisibility(View.GONE);
+            noConnectionLl.setVisibility(View.VISIBLE);
 
+        }
     }
 
     @Override
@@ -313,14 +320,27 @@ public class HomeFragment extends Fragment {
         return true;
     }
 
+    private void checkNightModeActivated() {
+
+        SharedPreferences themePref = getActivity().getSharedPreferences(SettingsActivity.THEME_PREFERENCE, Context.MODE_PRIVATE);
+        boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
+
+        if (isDarkMode){
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else {
+            ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+
     @Override
     public void onResume() {
-        super.onResume();
 
+        checkNightModeActivated();
+        checkNetworkStatus();
         showHide = false;
-        simpleCategoryRv.setVisibility(View.GONE);
-        categoryLL.setVisibility(View.VISIBLE);
+        simpleCategoryCv.setVisibility(View.GONE);
+        categoryCv.setVisibility(View.VISIBLE);
         seeAllCategoriesTv.setText("SHOW ALL");
-        loadStories("byDateAsc");
+        super.onResume();
     }
 }

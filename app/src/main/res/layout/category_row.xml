@@ -3,12 +3,10 @@
     android:layout_width="220dp"
     android:layout_height="160dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:id="@+id/categoryCv"
     app:cardElevation="2dp"
-    app:cardCornerRadius="8dp"
-    android:layout_marginLeft="7dp"
-    android:layout_marginRight="7dp">
+    app:cardCornerRadius="4dp"
+    android:layout_marginHorizontal="5dp">
 
     <RelativeLayout
         android:layout_width="220dp"
@@ -18,7 +16,8 @@
             android:id="@+id/categoryIv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:foreground="@color/imgOverlay"/>
 
         <ImageButton
             android:id="@+id/optionIb"
@@ -42,7 +41,6 @@
             android:textColor="@color/categoryRowBottomTextColor"
             android:background="@color/categoryRowBottomLineColor"
             android:layout_alignParentBottom="true"/>
-
 
     </RelativeLayout>
 

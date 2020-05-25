@@ -7,7 +7,7 @@
     <color name="secondaryColor">#c0ca33</color>
     <color name="secondaryLightColor">#f5fd67</color>
     <color name="secondaryDarkColor">#8c9900</color>
-    <color name="primaryTextColor">#000000</color>
+    <color name="primaryTextColor">#424242</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="storyBgColor">#bdbdbd</color>
     <color name="storyTextColor">#424242</color>
@@ -16,4 +16,8 @@
     <color name="categoryRowBottomLineColor">#992c2c2c</color>
     <color name="categoryRowBottomTextColor">#ffffff</color>
     <color name="authorProPicBorderColor">#ffffff</color>
+    <color name="msgTagStoryNameTextColor">#ffffff</color>
+    <color name="bottomNavBgColor">#ffffff</color>
+    <color name="relatedListBgColor">#40000000</color>
+    <color name="imgOverlay">#00000000</color>
 </resources>
