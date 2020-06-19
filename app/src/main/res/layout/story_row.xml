@@ -54,7 +54,7 @@
                         android:id="@+id/authorNameTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:padding="5dp"
                         android:textColor="@color/primaryTextColor"/>
 
@@ -62,7 +62,7 @@
                         android:id="@+id/storyDateTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:padding="5dp"
                         android:textColor="@color/primaryTextColor"/>
 

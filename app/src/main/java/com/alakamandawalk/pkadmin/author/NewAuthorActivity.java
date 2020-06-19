@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alakamandawalk.pkadmin.R;
@@ -33,11 +34,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -56,7 +62,10 @@ public class NewAuthorActivity extends AppCompatActivity {
 
     String profileOrCoverImg;
 
+    String authorId, authorName, authorPost , authorDescription, authorCoverImage , authorProfileImage;
+
     EditText authorIdEt, authorNameEt, authorPostEt, authorDescriptionEt;
+    TextView titleTv, authorIdTv;
     ImageView authorCoverImg, authorProfileImg;
     Button addOrUpdateAuthorBtn;
     ImageButton backIb;
@@ -77,9 +86,15 @@ public class NewAuthorActivity extends AppCompatActivity {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
+        Intent intent = getIntent();
+        final String key = intent.getStringExtra("key");
+        authorId = intent.getStringExtra("authorId");
+
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+        authorIdTv = findViewById(R.id.authorIdTv);
+        titleTv = findViewById(R.id.titleTv);
         authorProfileImg = findViewById(R.id.authorProfileImg);
         authorCoverImg =  findViewById(R.id.authorCoverImg);
         addOrUpdateAuthorBtn = findViewById(R.id.addOrUpdateAuthorBtn);
@@ -108,18 +123,26 @@ public class NewAuthorActivity extends AppCompatActivity {
             }
         });
 
+        if (key.equals("edit")){
+            titleTv.setText("Edit author");
+            addOrUpdateAuthorBtn.setText("update author");
+            authorIdEt.setVisibility(View.GONE);
+            loadAuthorData();
+        }else {
+            authorIdTv.setVisibility(View.GONE);
+            titleTv.setText("New author");
+            addOrUpdateAuthorBtn.setText("add author");
+        }
+
         addOrUpdateAuthorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String authorId = authorIdEt.getText().toString().trim();
-                String authorName = authorNameEt.getText().toString().trim();
-                String authorPost = authorPostEt.getText().toString().trim();
-                String authorDescription = authorDescriptionEt.getText().toString().trim();
 
-                if(TextUtils.isEmpty(authorId)){
-                    Toast.makeText(NewAuthorActivity.this, "author id is empty!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                authorId = authorIdEt.getText().toString().trim();
+                authorName = authorNameEt.getText().toString().trim();
+                authorPost = authorPostEt.getText().toString().trim();
+                authorDescription = authorDescriptionEt.getText().toString().trim();
+
                 if(TextUtils.isEmpty(authorName)){
                     Toast.makeText(NewAuthorActivity.this, "author name is empty!", Toast.LENGTH_SHORT).show();
                     return;
@@ -134,8 +157,18 @@ public class NewAuthorActivity extends AppCompatActivity {
                     return;
                 }
 
-                uploadData(authorId, authorName, authorPost, authorDescription);
+                if (key.equals("edit")){
 
+                    updateAuthor();
+
+                }else {
+
+                    if(TextUtils.isEmpty(authorId)){
+                        Toast.makeText(NewAuthorActivity.this, "author id is empty!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    uploadData();
+                }
             }
         });
 
@@ -147,7 +180,178 @@ public class NewAuthorActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadData(final String authorId, final String authorName, final String authorPost, final String authorDescription) {
+    private void updateAuthor() {
+
+        pd.setMessage("deleting cover image...");
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+
+        Bitmap proBitmap = ((BitmapDrawable)authorProfileImg.getDrawable()).getBitmap();
+        ByteArrayOutputStream proBaos = new ByteArrayOutputStream();
+        proBitmap.compress(Bitmap.CompressFormat.PNG, 100, proBaos);
+        final byte[] proPic = proBaos.toByteArray();
+
+        Bitmap coverBitmap = ((BitmapDrawable)authorCoverImg.getDrawable()).getBitmap();
+        ByteArrayOutputStream coverBaos = new ByteArrayOutputStream();
+        coverBitmap.compress(Bitmap.CompressFormat.PNG, 100, coverBaos);
+        final byte[] coverPic = coverBaos.toByteArray();
+
+        final String coverPathAndName = "author/" + "coverImage_" + authorId;
+        final String profilePathAndName = "author/" + "profileImage_" + authorId;
+
+        StorageReference delCoverRef = FirebaseStorage.getInstance().getReferenceFromUrl(authorCoverImage);
+        delCoverRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                pd.setMessage("deleting profile image...");
+
+                StorageReference delProfileRef = FirebaseStorage.getInstance().getReferenceFromUrl(authorProfileImage);
+                delProfileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        pd.setMessage("uploading cover image...");
+
+                        StorageReference coverRef = FirebaseStorage.getInstance().getReference(coverPathAndName);
+                        coverRef.putBytes(coverPic)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                        while (!uriTask.isSuccessful());
+
+                                        final String coverUri = uriTask.getResult().toString();
+
+                                        pd.setMessage("uploading profile image...");
+
+                                        StorageReference proRef = FirebaseStorage.getInstance().getReference(profilePathAndName);
+                                        proRef.putBytes(proPic)
+                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                                        while (!uriTask.isSuccessful());
+
+                                                        String proUri = uriTask.getResult().toString();
+
+                                                        pd.setMessage("uploading author data...");
+
+                                                        if (uriTask.isSuccessful()){
+
+                                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                                            hashMap.put("authorName", authorName);
+                                                            hashMap.put("authorPost", authorPost);
+                                                            hashMap.put("authorDescription", authorDescription);
+                                                            hashMap.put("authorCoverImage", coverUri);
+                                                            hashMap.put("authorProfileImage", proUri);
+
+                                                            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("author");
+                                                            dbRef.child(authorId)
+                                                                    .updateChildren(hashMap)
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+
+                                                                            pd.dismiss();
+                                                                            Toast.makeText(NewAuthorActivity.this, "author updated!", Toast.LENGTH_SHORT).show();
+                                                                            Intent intent = new Intent(NewAuthorActivity.this, AuthorProfileActivity.class);
+                                                                            intent.putExtra("authorId", authorId);
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    pd.dismiss();
+                                                                    Toast.makeText(NewAuthorActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(NewAuthorActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                pd.dismiss();
+                                Toast.makeText(NewAuthorActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(NewAuthorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        pd.dismiss();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(NewAuthorActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+            }
+        });
+    }
+
+    private void loadAuthorData() {
+
+        DatabaseReference authorRef = FirebaseDatabase.getInstance().getReference("author");
+        Query query = authorRef.orderByChild("authorId").equalTo(authorId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    authorName = ds.child("authorName").getValue().toString();
+                    authorPost = ds.child("authorPost").getValue().toString();
+                    authorDescription = ds.child("authorDescription").getValue().toString();
+                    authorCoverImage = ds.child("authorCoverImage").getValue().toString();
+                    authorProfileImage = ds.child("authorProfileImage").getValue().toString();
+
+                    authorNameEt.setText(authorName);
+                    authorPostEt.setText(authorPost);
+                    authorDescriptionEt.setText(authorDescription);
+                    authorIdTv.setText(authorId);
+
+                    try {
+                        Picasso.get()
+                                .load(authorCoverImage)
+                                .fit()
+                                .centerCrop()
+                                .placeholder(R.drawable.img_place_holder)
+                                .into(authorCoverImg);
+                    }catch (Exception e){
+                        Picasso.get().load(R.drawable.img_place_holder).into(authorCoverImg);
+                    }
+
+                    try {
+                        Picasso.get()
+                                .load(authorProfileImage)
+                                .fit()
+                                .centerCrop()
+                                .placeholder(R.drawable.img_place_holder)
+                                .into(authorProfileImg);
+                    }catch (Exception e){
+                        Picasso.get().load(R.drawable.img_place_holder).into(authorProfileImg);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(NewAuthorActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadData() {
 
         pd.setMessage("uploading cover image...");
         pd.show();

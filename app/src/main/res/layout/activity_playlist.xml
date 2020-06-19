@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:foreground="@color/imgOverlay"/>
+                android:foreground="@color/playlistImgOverlay"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
@@ -35,7 +35,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/categoryRowBottomLineColor">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -51,7 +52,7 @@
                             android:background="@null"
                             android:layout_gravity="center"
                             android:padding="10dp"
-                            android:tint="@color/primaryTextColor"/>
+                            android:tint="@color/categoryRowBottomTextColor"/>
 
                         <TextView
                             android:id="@+id/playlistNameTv"
@@ -59,7 +60,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:layout_gravity="center"
-                            android:textColor="@color/primaryTextColor"
+                            android:textColor="@color/categoryRowBottomTextColor"
                             android:layout_marginLeft="10dp" />
 
                     </LinearLayout>
@@ -73,7 +74,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:padding="10dp"
-                        android:tint="@color/primaryTextColor"/>
+                        android:tint="@color/categoryRowBottomTextColor"/>
 
                 </RelativeLayout>
 

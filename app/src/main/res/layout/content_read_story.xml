@@ -145,11 +145,11 @@
                             android:tint="@color/primaryTextColor"/>
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="author"
+                            android:text="@string/author"
                             android:textColor="@color/primaryTextColor"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textAlignment="center"/>
 
                     </LinearLayout>
 
@@ -171,11 +171,11 @@
 
                         <TextView
                             android:id="@+id/downloadBtnTipTv"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="download"
+                            android:text="@string/download"
                             android:textColor="@color/primaryTextColor"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textAlignment="center"/>
 
                     </LinearLayout>
 
@@ -196,11 +196,11 @@
                             android:tint="@color/primaryTextColor"/>
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="playlist"
+                            android:text="@string/playlist"
                             android:textColor="@color/primaryTextColor"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textAlignment="center"/>
 
                     </LinearLayout>
 
@@ -221,11 +221,11 @@
                             android:tint="@color/primaryTextColor"/>
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="related"
+                            android:text="@string/related"
                             android:textColor="@color/primaryTextColor"
-                            android:layout_gravity="center_horizontal"/>
+                            android:textAlignment="center"/>
 
                     </LinearLayout>
 

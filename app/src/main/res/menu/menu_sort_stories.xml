@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/sort_by_date_asc"
-        android:title="newest first" />
+        android:title="@string/newest_first" />
 
     <item android:id="@+id/sort_by_date_dsc"
-        android:title="oldest first" />
+        android:title="@string/oldest_first" />
 
     <item android:id="@+id/sort_shuffle"
-        android:title="shuffle" />
+        android:title="@string/shuffle" />
 
 </menu>

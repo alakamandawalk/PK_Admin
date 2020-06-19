@@ -20,4 +20,5 @@
     <color name="bottomNavBgColor">#1b1b1b</color>
     <color name="relatedListBgColor">#cc000000</color>
     <color name="imgOverlay">#4d000000</color>
+    <color name="playlistImgOverlay">#4d000000</color>
 </resources>

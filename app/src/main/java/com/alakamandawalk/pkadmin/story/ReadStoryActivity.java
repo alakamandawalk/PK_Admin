@@ -8,13 +8,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -82,6 +85,9 @@ public class ReadStoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_story);
+
+        Configuration configuration = new Configuration();
+        setLocale(configuration);
 
         SharedPreferences themePref = getSharedPreferences(SettingsActivity.THEME_PREFERENCE, MODE_PRIVATE);
         boolean isDarkMode = themePref.getBoolean(SettingsActivity.KEY_IS_NIGHT_MODE, false);
@@ -280,13 +286,13 @@ public class ReadStoryActivity extends AppCompatActivity {
 
             isDownloaded = true;
             downloadIb.setImageResource(R.drawable.ic_delete_holo_dark);
-            downloadBtnTipTv.setText("remove");
+            downloadBtnTipTv.setText(getString(R.string.remove));
             loadStoryOffline(id);
 
         }else {
             isDownloaded=false;
             downloadIb.setImageResource(R.drawable.ic_download_holo_dark);
-            downloadBtnTipTv.setText("download");
+            downloadBtnTipTv.setText(getString(R.string.download));
             loadStoryOnline(id);
         }
 
@@ -296,12 +302,12 @@ public class ReadStoryActivity extends AppCompatActivity {
 
         if (isDownloaded){
 
-            pd.setMessage("removing...");
+            pd.setMessage(getString(R.string.removing));
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme);
-            builder.setTitle("Are you sure?");
-            builder.setMessage("you want to delete this story from downloads?");
-            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            builder.setTitle(getString(R.string.delete));
+            builder.setMessage(getString(R.string.delete_message));
+            builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -314,7 +320,7 @@ public class ReadStoryActivity extends AppCompatActivity {
                     pd.dismiss();
                 }
             });
-            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -326,7 +332,7 @@ public class ReadStoryActivity extends AppCompatActivity {
 
         }else {
 
-            pd.setMessage("downloading...");
+            pd.setMessage(getString(R.string.downloading));
             pd.show();
             pd.setCanceledOnTouchOutside(false);
 
@@ -419,6 +425,36 @@ public class ReadStoryActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1){
+            setLocale(overrideConfiguration);
+            applyOverrideConfiguration(overrideConfiguration);
+        }
+    }
+
+    public void setLocale(Configuration config) {
+
+        SharedPreferences languagePreference = getSharedPreferences(SettingsActivity.LANGUAGE_PREF, Context.MODE_PRIVATE);
+        String lang =  languagePreference.getString(SettingsActivity.LANGUAGE_KEY, SettingsActivity.ENGLISH);
+        String language;
+        if (lang.equals(SettingsActivity.SINHALA)){
+
+            language = SettingsActivity.SINHALA;
+        }else {
+            language = SettingsActivity.ENGLISH;
+        }
+
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        if (Build.VERSION.SDK_INT>=17){
+            config.setLocale(locale);
+        } else {
+            config.locale = locale;
+        }
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
     }
 
     @Override

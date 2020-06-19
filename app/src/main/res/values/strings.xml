@@ -20,4 +20,40 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
+    <string name="authors_action_bar_title">Authors</string>
+    <string name="author_profile_action_bar_title">Author Profile</string>
+    <string name="search_hint">Search</string>
+    <string name="author">author</string>
+    <string name="download">download</string>
+    <string name="remove">remove</string>
+    <string name="playlist">playlist</string>
+    <string name="related">related</string>
+    <string name="settings">settings</string>
+    <string name="theme">Theme</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="categories">CATEGORIES</string>
+    <string name="show_all">SHOW ALL</string>
+    <string name="show_less">SHOW LESS</string>
+    <string name="sort_by">SORT BY</string>
+    <string name="cant_connect">Can\'t connect at the moment</string>
+    <string name="read_downloads">read downloads</string>
+    <string name="cancel">Cancel</string>
+    <string name="home">Home</string>
+    <string name="downloads">Downloads</string>
+    <string name="messages">Messages</string>
+    <string name="explore">Explore</string>
+    <string name="downloading">Downloading…</string>
+    <string name="removing">Removing…</string>
+    <string name="delete">Delete</string>
+    <string name="delete_message">Are you sure you want to delete this story from downloads?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="language">Language</string>
+    <string name="stories">STORIES</string>
+    <string name="newest_first">newest first</string>
+    <string name="oldest_first">oldest first</string>
+    <string name="shuffle">shuffle</string>
+    <string name="changeLanguage">change language</string>
+
+
 </resources>

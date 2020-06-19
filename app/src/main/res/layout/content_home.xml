@@ -25,7 +25,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:text="CATEGORIES"
+                    android:text="@string/categories"
                     android:textColor="@color/secondaryColor"/>
 
                 <TextView
@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="SHOW ALL"
+                    android:text="@string/show_all"
                     android:textColor="@color/secondaryColor"/>
 
             </LinearLayout>
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="SORT BY"
+                android:text="@string/sort_by"
                 android:textColor="@color/secondaryColor"/>
 
         </LinearLayout>

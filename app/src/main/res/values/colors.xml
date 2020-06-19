@@ -18,6 +18,7 @@
     <color name="authorProPicBorderColor">#ffffff</color>
     <color name="msgTagStoryNameTextColor">#ffffff</color>
     <color name="bottomNavBgColor">#ffffff</color>
-    <color name="relatedListBgColor">#40000000</color>
+    <color name="relatedListBgColor">#cc000000</color>
     <color name="imgOverlay">#00000000</color>
+    <color name="playlistImgOverlay">#4d000000</color>
 </resources>

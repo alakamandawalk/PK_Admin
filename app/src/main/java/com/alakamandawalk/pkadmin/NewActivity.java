@@ -77,7 +77,10 @@ public class NewActivity extends AppCompatActivity {
         newAuthorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NewActivity.this, NewAuthorActivity.class));
+
+                Intent intent = new Intent(NewActivity.this, NewAuthorActivity.class);
+                intent.putExtra("key", "add");
+                startActivity(intent);
             }
         });
 

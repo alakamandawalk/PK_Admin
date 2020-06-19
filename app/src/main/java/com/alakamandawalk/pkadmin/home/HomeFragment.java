@@ -132,13 +132,13 @@ public class HomeFragment extends Fragment {
                     showHide = false;
                     simpleCategoryCv.setVisibility(View.GONE);
                     categoryCv.setVisibility(View.VISIBLE);
-                    seeAllCategoriesTv.setText("SHOW ALL");
+                    seeAllCategoriesTv.setText(getResources().getString(R.string.show_all));
 
                 }else {
                     showHide = true;
                     simpleCategoryCv.setVisibility(View.VISIBLE);
                     categoryCv.setVisibility(View.GONE);
-                    seeAllCategoriesTv.setText("SHOW LESS");
+                    seeAllCategoriesTv.setText(getResources().getString(R.string.show_less));
                 }
             }
         });
@@ -154,7 +154,7 @@ public class HomeFragment extends Fragment {
         readDownloadsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DashboardActivity.titleTv.setText("Downloads");
+                DashboardActivity.titleTv.setText(getResources().getString(R.string.downloads));
                 DownloadFragment downloadFragment = new DownloadFragment();
                 FragmentTransaction ft2 = getActivity().getSupportFragmentManager().beginTransaction();
                 ft2.replace(R.id.frameLayout, downloadFragment, "");
@@ -182,7 +182,7 @@ public class HomeFragment extends Fragment {
                         storyAdapter = new StoryAdapter(getActivity(), storyList);
                         storyRv.setAdapter(storyAdapter);
                     }
-                    storyCountTv.setText(storyList.size()+" STORIES");
+                    storyCountTv.setText(storyList.size()+ " " +getString(R.string.stories));
                 }
 
                 @Override
@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment {
                         storyAdapter = new StoryAdapter(getActivity(), storyList);
                         storyRv.setAdapter(storyAdapter);
                     }
-                    storyCountTv.setText(storyList.size()+" STORIES");
+                    storyCountTv.setText(storyList.size()+ " " +getString(R.string.stories));
                 }
 
                 @Override
@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment {
                         storyAdapter = new StoryAdapter(getActivity(), storyList);
                         storyRv.setAdapter(storyAdapter);
                     }
-                    storyCountTv.setText(storyList.size()+" STORIES");
+                    storyCountTv.setText(storyList.size()+ " " +getString(R.string.stories));
                 }
 
                 @Override
@@ -295,7 +295,7 @@ public class HomeFragment extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.menu_sort_stories,menu);
-        menu.setHeaderTitle("Sort By");
+        menu.setHeaderTitle(getResources().getString(R.string.sort_by));
     }
 
     @Override
@@ -340,7 +340,7 @@ public class HomeFragment extends Fragment {
         showHide = false;
         simpleCategoryCv.setVisibility(View.GONE);
         categoryCv.setVisibility(View.VISIBLE);
-        seeAllCategoriesTv.setText("SHOW ALL");
+        seeAllCategoriesTv.setText(getResources().getString(R.string.show_all));
         super.onResume();
     }
 }

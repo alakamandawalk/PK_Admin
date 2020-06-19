@@ -37,8 +37,7 @@
                         android:layout_weight="1"
                         android:textColor="@color/primaryTextColor"
                         android:textSize="20sp"
-                        android:layout_gravity="center_vertical"
-                        android:text="Home"/>
+                        android:layout_gravity="center_vertical"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"

@@ -9,8 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -31,6 +33,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Locale;
+
 public class DashboardActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
@@ -49,8 +53,10 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        Configuration configuration = new Configuration();
         checkNightModeActivated();
         checkUserStatus();
+        setLocale(configuration);
 
         frameLayout = findViewById(R.id.frameLayout);
         bottomNav = findViewById(R.id.bottomNav);
@@ -82,7 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
                 PopupMenu popupMenu = new PopupMenu(DashboardActivity.this, menuIb, Gravity.END);
                 popupMenu.getMenu().add(Menu.NONE, 0,0,"New");
                 popupMenu.getMenu().add(Menu.NONE, 1,1,"Sign Out");
-                popupMenu.getMenu().add(Menu.NONE, 2,2,"Settings");
+                popupMenu.getMenu().add(Menu.NONE, 2,2,getString(R.string.settings));
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -135,7 +141,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 case R.id.nav_home:
 
-                    titleTv.setText("Home");
+                    titleTv.setText(getString(R.string.home));
                     HomeFragment homeFragment = new HomeFragment();
                     FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
                     ft1.replace(R.id.frameLayout, homeFragment, "");
@@ -156,7 +162,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 case R.id.nav_downloads:
 
-                    titleTv.setText("Downloads");
+                    titleTv.setText(getString(R.string.downloads));
                     DownloadFragment downloadFragment = new DownloadFragment();
                     FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                     ft2.replace(R.id.frameLayout, downloadFragment, "");
@@ -165,7 +171,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 case R.id.nav_messages:
 
-                    titleTv.setText("Messages");
+                    titleTv.setText(getString(R.string.messages));
                     MessagesFragment messagesFragment = new MessagesFragment();
                     FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
                     ft3.replace(R.id.frameLayout, messagesFragment, "");
@@ -174,7 +180,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                 case R.id.nav_explore:
 
-                    titleTv.setText("Explore");
+                    titleTv.setText(getString(R.string.explore));
                     ExploreFragment exploreFragment = new ExploreFragment();
                     FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
                     ft4.replace(R.id.frameLayout, exploreFragment, "");
@@ -201,7 +207,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     public void loadFirstActivity(){
 
-        titleTv.setText("Home");
+        titleTv.setText(getString(R.string.home));
         HomeFragment homeFragment = new HomeFragment();
         FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
         ft1.replace(R.id.frameLayout, homeFragment, "");
@@ -219,6 +225,36 @@ public class DashboardActivity extends AppCompatActivity {
         }else {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+    }
+
+    @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1){
+            setLocale(overrideConfiguration);
+            applyOverrideConfiguration(overrideConfiguration);
+        }
+    }
+
+    public void setLocale(Configuration config) {
+
+        SharedPreferences languagePreference = getSharedPreferences(SettingsActivity.LANGUAGE_PREF, Context.MODE_PRIVATE);
+        String lang =  languagePreference.getString(SettingsActivity.LANGUAGE_KEY, SettingsActivity.ENGLISH);
+        String language;
+        if (lang.equals(SettingsActivity.SINHALA)){
+
+           language = SettingsActivity.SINHALA;
+        }else {
+            language = SettingsActivity.ENGLISH;
+        }
+
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        if (Build.VERSION.SDK_INT>=17){
+            config.setLocale(locale);
+        } else {
+            config.locale = locale;
+        }
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
     }
 
     @Override

@@ -82,6 +82,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<StoryAdapter.StoryView
 
         holder.storyNameTv.setText(storyName);
         holder.storyDateTv.setText(storyDate);
+        holder.authorNameTv.setVisibility(View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
